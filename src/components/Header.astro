@@ -1,0 +1,120 @@
+---
+import { clinica } from "../dados/clinica";
+
+const links = [
+  { href: "/", texto: "Início" },
+  { href: "/tratamentos", texto: "Tratamentos" },
+  { href: "/noticias", texto: "Notícias" },
+  { href: "/contato", texto: "Contato" },
+];
+
+// Marca o link da página atual (aria-current) para leitor de tela e estilo
+const atual = Astro.url.pathname;
+const ativo = (href: string) =>
+  href === "/" ? atual === "/" : atual.startsWith(href);
+---
+
+<header class="header">
+  <div class="container barra">
+    <!-- TODO: trocar pelo logo em SVG quando o cliente mandar -->
+    <a href="/" class="logo">
+      <span class="logo-nome">Silhueta</span>
+      <span class="logo-sub">Clínica Médica</span>
+    </a>
+
+    <nav aria-label="Principal">
+      <ul>
+        {links.map((link) => (
+          <li>
+            <a href={link.href} aria-current={ativo(link.href) ? "page" : undefined}>
+              {link.texto}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <a class="botao agendar" href={clinica.whatsappLink} target="_blank" rel="noopener">
+      Agendar
+    </a>
+  </div>
+</header>
+
+<style>
+  .header {
+    background: var(--cor-fundo);
+    border-bottom: 1px solid var(--cor-nude);
+  }
+
+  .barra {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 2rem;
+    padding-block: 1rem;
+  }
+
+  .logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+    text-decoration: none;
+    color: var(--cor-texto);
+  }
+
+  .logo-nome {
+    font-family: var(--fonte-titulo);
+    font-size: 1.9rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .logo-sub {
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--cor-dourado-escuro);
+    margin-top: 0.3rem;
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  nav a {
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    color: var(--cor-texto);
+    padding-block: 0.4rem;
+    border-bottom: 1px solid transparent;
+  }
+
+  nav a:hover,
+  nav a[aria-current="page"] {
+    border-bottom-color: var(--cor-dourado);
+  }
+
+  .agendar {
+    padding: 0.6rem 1.4rem;
+    font-size: 0.9rem;
+  }
+
+  /* No celular o menu vai para a linha de baixo, ocupando a largura toda */
+  @media (max-width: 760px) {
+    nav {
+      order: 3;
+      width: 100%;
+    }
+    ul {
+      justify-content: space-between;
+    }
+  }
+</style>

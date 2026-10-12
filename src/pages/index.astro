@@ -1,17 +1,283 @@
 ---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import IconeWhatsapp from "../components/IconeWhatsapp.astro";
+import { clinica } from "../dados/clinica";
+
+// Seção 2: serviços organizados pelo que o paciente procura
+const cuidados = [
+  {
+    problema: "Linhas de expressão e rugas",
+    tratamentos: "Toxina botulínica, preenchimento e fios de sustentação",
+  },
+  {
+    problema: "Flacidez e perda de firmeza",
+    tratamentos: "Ultraformer, Sculptra e Elleva",
+  },
+  {
+    problema: "Manchas, textura e viço da pele",
+    tratamentos: "Laser Lavieen, peeling, microagulhamento e limpeza de pele",
+  },
+  {
+    problema: "Gordura localizada e contorno corporal",
+    tratamentos: "Heccus Turbo, lipo enzimática, carboxiterapia e massagem modeladora",
+  },
+  {
+    problema: "Peso e composição corporal",
+    tratamentos: "Protocolos de emagrecimento e de sarcopenia, com acompanhamento médico",
+  },
+  {
+    problema: "Cansaço, stress e bem-estar",
+    tratamentos: "Protocolo stress e ansiedade, reposição de vitaminas e massagem relaxante",
+  },
+];
+
+// Seção 4: passos até o tratamento
+const passos = [
+  { titulo: "Fale com a gente", texto: "Chame no WhatsApp e escolha o melhor dia e horário." },
+  { titulo: "Consulta de avaliação", texto: "O médico conversa com você e avalia o que faz sentido para o seu caso." },
+  { titulo: "Plano de cuidado", texto: "Você recebe um plano com as etapas, os cuidados e as orientações." },
+  { titulo: "Acompanhamento", texto: "Retornos para acompanhar a evolução e ajustar o que for preciso." },
+];
+
+// Seção 5: ambientes (TODO: fotos reais)
+const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala de espera"];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<header><h1>Clínica Silhueta</h1></header>
-	
-	</body>
-</html>
+<BaseLayout titulo="Início">
+  <!-- 1. Topo -->
+  <section class="hero">
+    <div class="container hero-grade">
+      <div class="hero-texto">
+        <p class="sobretitulo">Clínica médica em Cuiabá</p>
+        <h1>Cuidado médico para a sua saúde, beleza e bem-estar</h1>
+        <p class="hero-sub">
+          Há mais de 30 anos a Clínica Silhueta acolhe cada paciente com atenção, avaliação
+          individual e tratamentos conduzidos por profissionais qualificados.
+        </p>
+        <div class="acoes">
+          <a class="botao" href={clinica.whatsappLink} target="_blank" rel="noopener">
+            <IconeWhatsapp /> Agendar pelo WhatsApp
+          </a>
+          <a class="botao botao-contorno" href="/tratamentos">Ver tratamentos</a>
+        </div>
+      </div>
+      <div class="hero-foto foto-provisoria">Foto real da clínica (TODO)</div>
+    </div>
+  </section>
+
+  <!-- 2. Cuidados por problema -->
+  <section class="secao">
+    <div class="container">
+      <div class="titulo-secao">
+        <p class="sobretitulo">Tratamentos</p>
+        <h2>O que você procura?</h2>
+        <p>Escolha o que mais combina com você. Na consulta, o médico indica o caminho certo para o seu caso.</p>
+      </div>
+      <ul class="cards">
+        {cuidados.map((c) => (
+          <li class="card">
+            <h3>{c.problema}</h3>
+            <p>{c.tratamentos}</p>
+            <a href="/tratamentos">Saiba mais <span aria-hidden="true">→</span></a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 3. Quem cuida de você -->
+  <section class="secao secao-areia">
+    <div class="container medico">
+      <div class="medico-foto foto-provisoria">Foto do médico (TODO)</div>
+      <div>
+        <p class="sobretitulo">Quem cuida de você</p>
+        <!-- TODO: nome, especialidade, CRM e RQE do responsável técnico -->
+        <h2>Dr(a). Nome Sobrenome</h2>
+        <p class="registro">Especialidade · CRM-MT 0000 · RQE 0000</p>
+        <p>
+          Breve apresentação do médico responsável: formação, áreas de atuação e a forma de
+          cuidar dos pacientes. Texto a ser escrito com o próprio médico.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Como funciona -->
+  <section class="secao">
+    <div class="container">
+      <div class="titulo-secao">
+        <p class="sobretitulo">Como funciona</p>
+        <h2>Do primeiro contato ao tratamento</h2>
+      </div>
+      <ol class="passos">
+        {passos.map((p, i) => (
+          <li>
+            <span class="numero" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+            <h3>{p.titulo}</h3>
+            <p>{p.texto}</p>
+          </li>
+        ))}
+      </ol>
+      <div class="centro">
+        <a class="botao" href={clinica.whatsappLink} target="_blank" rel="noopener">
+          <IconeWhatsapp /> Agendar pelo WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. A clínica -->
+  <section class="secao secao-areia">
+    <div class="container">
+      <div class="titulo-secao">
+        <p class="sobretitulo">A clínica</p>
+        <h2>Um espaço pensado para você</h2>
+        <p>{clinica.endereco}, no Centro Norte de Cuiabá.</p>
+      </div>
+      <ul class="galeria">
+        {ambientes.map((nome) => (
+          <li class="foto-provisoria">{nome} (TODO)</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* 1. Topo */
+  .hero {
+    padding-block: clamp(3rem, 7vw, 5.5rem);
+    background: linear-gradient(180deg, var(--cor-fundo), var(--cor-areia));
+  }
+
+  .hero-grade {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: center;
+    gap: clamp(2rem, 5vw, 4rem);
+  }
+
+  .hero-sub {
+    font-size: 1.15rem;
+    color: var(--cor-texto-suave);
+    max-width: 32rem;
+  }
+
+  .acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .hero-foto {
+    aspect-ratio: 4 / 5;
+  }
+
+  /* 2. Cards */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1.75rem;
+    background: var(--cor-branco);
+    border: 1px solid var(--cor-nude);
+    text-align: center;
+  }
+
+  .card p {
+    color: var(--cor-texto-suave);
+    font-size: 0.98rem;
+    flex: 1;
+  }
+
+  .card a {
+    text-decoration: none;
+    letter-spacing: 0.05em;
+  }
+
+  /* 3. Médico */
+  .medico {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    align-items: center;
+    gap: clamp(2rem, 5vw, 4rem);
+  }
+
+  .medico-foto {
+    aspect-ratio: 3 / 4;
+    max-width: 22rem;
+  }
+
+  .registro {
+    color: var(--cor-dourado-escuro);
+    letter-spacing: 0.05em;
+  }
+
+  /* 4. Passos */
+  .passos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 2rem;
+    list-style: none;
+    margin: 0 0 3rem;
+    padding: 0;
+  }
+
+  .passos li {
+    border-top: 1px solid var(--cor-dourado);
+    padding-top: 1.25rem;
+  }
+
+  .numero {
+    font-family: var(--fonte-titulo);
+    font-size: 2.5rem;
+    color: var(--cor-dourado);
+    line-height: 1;
+  }
+
+  .passos p {
+    color: var(--cor-texto-suave);
+  }
+
+  .centro {
+    text-align: center;
+  }
+
+  /* 5. Galeria */
+  .galeria {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 1.25rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .galeria li {
+    aspect-ratio: 3 / 4;
+  }
+
+  /* Celular: colunas viram uma só */
+  @media (max-width: 760px) {
+    .hero-grade,
+    .medico {
+      grid-template-columns: 1fr;
+    }
+    .hero-foto {
+      max-width: 20rem;
+      margin-inline: auto;
+    }
+    .medico-foto {
+      margin-inline: auto;
+    }
+  }
+</style>
