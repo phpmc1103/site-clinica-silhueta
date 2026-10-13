@@ -1,0 +1,36 @@
+---
+import IconeWhatsapp from "./IconeWhatsapp.astro";
+import { clinica } from "../dados/clinica";
+---
+
+<a
+  class="flutuante"
+  href={clinica.whatsappLink}
+  target="_blank"
+  rel="noopener"
+  aria-label="Agendar pelo WhatsApp"
+>
+  <IconeWhatsapp tamanho={30} />
+</a>
+
+<style>
+  .flutuante {
+    position: fixed;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    z-index: 50;
+    display: grid;
+    place-items: center;
+    width: 3.75rem;
+    height: 3.75rem;
+    border-radius: 50%;
+    background: #1f7a4d; /* verde do WhatsApp escurecido para dar contraste */
+    color: #fff;
+    box-shadow: 0 6px 20px rgb(63 54 49 / 0.25);
+    transition: transform 0.2s;
+  }
+
+  .flutuante:hover {
+    transform: scale(1.06);
+  }
+</style>

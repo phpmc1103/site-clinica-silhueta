@@ -1,0 +1,144 @@
+---
+import { clinica } from "../dados/clinica";
+
+const ano = new Date().getFullYear();
+---
+
+<footer class="footer" id="contato">
+  <div class="container colunas">
+    <div>
+      <p class="logo-nome">Silhueta</p>
+      <p class="suave">Clínica médica em Cuiabá. Há mais de 30 anos cuidando da sua saúde e do seu bem-estar.</p>
+      <!-- TODO: nome, CRM e RQE do responsável técnico -->
+      <p class="suave pequeno">Responsável técnico: Dr(a). Nome Sobrenome · CRM-MT 0000</p>
+    </div>
+
+    <div>
+      <h2>Onde estamos</h2>
+      <address>
+        {clinica.endereco}<br />
+        {clinica.cidade}
+      </address>
+      <a href={clinica.mapaLink} target="_blank" rel="noopener">Ver no mapa</a>
+    </div>
+
+    <div>
+      <h2>Horários</h2>
+      <ul>
+        {clinica.horarios.map((h) => <li>{h}</li>)}
+      </ul>
+    </div>
+
+    <div>
+      <h2>Fale com a gente</h2>
+      <ul>
+        <li>WhatsApp: <a href={clinica.whatsappLink} target="_blank" rel="noopener">{clinica.whatsappTexto}</a></li>
+        <li>Telefone: <a href={clinica.telefoneLink}>{clinica.telefoneTexto}</a></li>
+        <li>Instagram: <a href={clinica.instagramLink} target="_blank" rel="noopener">{clinica.instagram}</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Mapa: o iframe só carrega quando o visitante rola até aqui (loading="lazy") -->
+  <div class="container mapa">
+    <iframe
+      title="Mapa com a localização da Clínica Silhueta"
+      src="https://www.google.com/maps?q=Rua+24+de+Outubro+194+Centro+Norte+Cuiaba+MT&output=embed"
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+
+  <div class="container rodape-final">
+    <p>© {ano} Clínica Silhueta · Cuiabá, MT</p>
+    <a href="/privacidade">Política de privacidade</a>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--cor-texto);
+    color: var(--cor-areia);
+    padding-top: 4rem;
+    font-size: 0.95rem;
+  }
+
+  .colunas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 2.5rem;
+  }
+
+  .logo-nome {
+    font-family: var(--fonte-titulo);
+    font-size: 2rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-family: var(--fonte-texto);
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cor-nude);
+    padding-bottom: 0.6rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--cor-dourado);
+  }
+
+  address {
+    font-style: normal;
+    margin-bottom: 0.5rem;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  a {
+    color: var(--cor-branco);
+  }
+
+  .suave {
+    color: var(--cor-nude);
+  }
+
+  .pequeno {
+    font-size: 0.85rem;
+  }
+
+  .mapa {
+    margin-top: 3rem;
+    height: 18rem;
+    border-radius: 1.5rem;
+    overflow: hidden;
+  }
+
+  .mapa iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .rodape-final {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: 2.5rem;
+    padding-block: 1.5rem;
+    border-top: 1px solid rgb(184 149 95 / 0.4);
+    font-size: 0.85rem;
+    color: var(--cor-nude);
+  }
+
+  .rodape-final p {
+    margin: 0;
+  }
+</style>

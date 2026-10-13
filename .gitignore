@@ -176,3 +176,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Contexto privado do Claude Code
+CLAUDE.local.md
