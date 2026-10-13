@@ -1,0 +1,12 @@
+{
+  // Nome do Worker na Cloudflare (precisa ser igual ao do painel)
+  "name": "site-clinica-silhueta",
+  "compatibility_date": "2026-10-12",
+  // Pasta que o Astro gera no build
+  "assets": {
+    "directory": "./dist"
+  },
+  // Prévias das branches. Bindings e vars não são herdados daqui de cima;
+  // vazio porque o site é só estático e não usa nenhum dos dois
+  "previews": {}
+}
