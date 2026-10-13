@@ -13,7 +13,7 @@
 
   /* TODO: trocar pelas fontes do Canva quando o cliente mandar */
   --fonte-titulo: Georgia,  serif;
-  --fonte-texto:  Copperplate, Georgia, sans-serif;
+  --fonte-texto: "Jost", Georgia, system-ui, sans-serif;
 
   --largura-max: 72rem;
 }
