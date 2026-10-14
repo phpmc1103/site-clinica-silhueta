@@ -27,8 +27,8 @@ export const categorias: readonly {
   },
   {
     id: "injetaveis",
-    titulo: "Injetáveis e protocolos",
-    descricao: "Protocolos com acompanhamento médico para emagrecimento, ganho de massa, reposições e saúde.",
+    titulo: "Injetáveis",
+    descricao: "Tratamentos com acompanhamento médico para emagrecimento, ganho de massa, reposições e saúde.",
     imagem: fotoInjetaveis,
   },
 ];

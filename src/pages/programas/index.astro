@@ -1,0 +1,103 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import IconeWhatsapp from "../../components/IconeWhatsapp.astro";
+import { clinica } from "../../dados/clinica";
+
+// Programas (Beauty Club e Protocolos Personalizados): mesma coleção dos tratamentos, categoria "programas"
+const programas = (await getCollection("tratamentos", (t) => t.data.categoria === "programas"))
+  .sort((a, b) => a.data.ordem - b.data.ordem);
+---
+
+<BaseLayout
+  titulo="Programas"
+  descricao="Beauty Club e protocolos personalizados da Clínica Silhueta, em Cuiabá. Agende sua avaliação pelo WhatsApp."
+>
+  <section class="secao">
+    <div class="container">
+      <div class="titulo-secao">
+        <p class="sobretitulo">Programas</p>
+        <h1>Programas e protocolos</h1>
+        <p>Acompanhamento contínuo, montado a partir da sua avaliação.</p>
+      </div>
+
+      <ul class="programas">
+        {programas.map((p) => (
+          <li class="programa">
+            <h2>{p.data.titulo}</h2>
+            <p>{p.data.resumo}</p>
+            <a href={`/programas/${p.id}`}>
+              Saiba mais <span class="visualmente-oculto">sobre {p.data.titulo}</span>
+              <span aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="secao secao-areia">
+    <div class="container titulo-secao final">
+      <h2>Quer saber qual programa combina com você?</h2>
+      <p>Fale com a gente. Na consulta de avaliação, o médico indica o caminho certo para você.</p>
+      <a class="botao" href={clinica.whatsappLink} target="_blank" rel="noopener">
+        <IconeWhatsapp /> Agendar pelo WhatsApp
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .programas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Card com o topo em arco, como no Menu de Cuidados */
+  .programa {
+    display: flex;
+    flex-direction: column;
+    padding: 2.5rem 1.5rem 1.75rem;
+    background: var(--cor-branco);
+    border: 1px solid var(--cor-nude);
+    border-radius: 8rem 8rem 0 0;
+    text-align: center;
+  }
+
+  .programa h2 {
+    font-size: 1.4rem;
+  }
+
+  .programa p {
+    flex: 1;
+    color: var(--cor-texto-suave);
+    font-size: 0.95rem;
+  }
+
+  .programa a {
+    text-decoration: none;
+    letter-spacing: 0.05em;
+  }
+
+  .programa a:hover {
+    text-decoration: underline;
+  }
+
+  .final {
+    margin-bottom: 0;
+  }
+
+  /* Texto só para leitor de tela: diferencia os vários "Saiba mais" */
+  .visualmente-oculto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>
