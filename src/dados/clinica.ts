@@ -6,6 +6,7 @@ const mensagem = "Olá! Gostaria de agendar um horário na Clínica Silhueta.";
 
 export const clinica = {
   nome: "Clínica Silhueta",
+  whatsappNumero,
   whatsappTexto: "(65) 98151-0109",
   whatsappLink: `https://wa.me/${whatsappNumero}?text=${encodeURIComponent(mensagem)}`,
   telefoneTexto: "(65) 3624-9588",
