@@ -1,0 +1,121 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import IconeWhatsapp from "../../components/IconeWhatsapp.astro";
+import { clinica } from "../../dados/clinica";
+import { categorias } from "../../dados/categorias";
+
+const tratamentos = await getCollection("tratamentos");
+
+// Quantos tratamentos cada categoria tem (aparece no card)
+const total = (id: string) => tratamentos.filter((t) => t.data.categoria === id).length;
+---
+
+<BaseLayout
+  titulo="Tratamentos"
+  descricao="Tratamentos faciais, corporais, injetáveis e protocolos da Clínica Silhueta, em Cuiabá. Agende sua avaliação pelo WhatsApp."
+>
+  <section class="secao">
+    <div class="container">
+      <div class="titulo-secao">
+        <p class="sobretitulo">Tratamentos</p>
+        <h1>Nossos tratamentos</h1>
+        <p>Cada tratamento começa com uma consulta, em que o médico avalia o que faz sentido para o seu caso.</p>
+      </div>
+
+      <ul class="categorias">
+        {categorias.map((c) => (
+          <li>
+            <a class="categoria" href={`/tratamentos/${c.id}`}>
+              <div class="foto foto-provisoria">Foto {c.titulo} (TODO)</div>
+              <div class="texto">
+                <h2>{c.titulo}</h2>
+                <p>{c.descricao}</p>
+                <p class="total">{total(c.id)} tratamentos</p>
+                <span class="saiba-mais">Saiba mais <span aria-hidden="true">→</span></span>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="secao secao-areia">
+    <div class="container titulo-secao final">
+      <h2>Não sabe qual escolher?</h2>
+      <p>Fale com a gente. Na consulta de avaliação, o médico indica o caminho certo para você.</p>
+      <a class="botao" href={clinica.whatsappLink} target="_blank" rel="noopener">
+        <IconeWhatsapp /> Agendar pelo WhatsApp
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .categorias {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* O card inteiro é o link */
+  .categoria {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--cor-branco);
+    border: 1px solid var(--cor-nude);
+    border-radius: 12rem 12rem 0 0;
+    overflow: hidden;
+    text-align: center;
+    text-decoration: none;
+    color: var(--cor-texto);
+    transition: border-color 0.2s;
+  }
+
+  .categoria:hover {
+    border-color: var(--cor-dourado);
+  }
+
+  /* Moldura da foto com o topo em arco */
+  .foto {
+    aspect-ratio: 4 / 3;
+  }
+
+  .texto {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1.75rem 1.5rem 2rem;
+  }
+
+  .texto p {
+    color: var(--cor-texto-suave);
+    font-size: 0.98rem;
+  }
+
+  .texto .total {
+    flex: 1;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cor-dourado-escuro);
+  }
+
+  .saiba-mais {
+    color: var(--cor-dourado-escuro);
+    letter-spacing: 0.05em;
+  }
+
+  .categoria:hover .saiba-mais {
+    text-decoration: underline;
+  }
+
+  .final {
+    margin-bottom: 0;
+  }
+</style>
