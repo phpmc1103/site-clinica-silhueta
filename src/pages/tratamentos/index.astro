@@ -16,13 +16,10 @@ const total = (id: string) => tratamentos.filter((t) => t.data.categoria === id)
   titulo="Tratamentos"
   descricao="Tratamentos faciais, corporais e injetáveis da Clínica Silhueta, em Cuiabá. Agende sua avaliação pelo WhatsApp."
 >
-  <section class="secao">
+  <section class="secao lista">
     <div class="container">
-      <div class="titulo-secao">
-        <p class="sobretitulo">Tratamentos</p>
-        <h1>Nossos tratamentos</h1>
-        <p>Cada tratamento começa com uma consulta, em que o médico avalia o que faz sentido para o seu caso.</p>
-      </div>
+      <!-- Título só para leitor de tela e buscadores: a página precisa de um h1 -->
+      <h1 class="visualmente-oculto">Nossos tratamentos</h1>
 
       <ul class="categorias">
         {categorias.map((c) => (
@@ -58,6 +55,11 @@ const total = (id: string) => tratamentos.filter((t) => t.data.categoria === id)
 </BaseLayout>
 
 <style>
+  /* Sem o título visível, os cards começam logo abaixo do menu */
+  .lista {
+    padding-top: clamp(2rem, 5vw, 3rem);
+  }
+
   .categorias {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
@@ -127,5 +129,15 @@ const total = (id: string) => tratamentos.filter((t) => t.data.categoria === id)
 
   .final {
     margin-bottom: 0;
+  }
+
+  /* Texto só para leitor de tela */
+  .visualmente-oculto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 </style>
