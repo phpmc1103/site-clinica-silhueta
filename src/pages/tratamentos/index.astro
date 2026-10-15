@@ -74,18 +74,26 @@ const total = (id: string) => tratamentos.filter((t) => t.data.categoria === id)
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: var(--cor-branco);
-    border: 1px solid var(--cor-nude);
+    background: var(--branco);
+    border: 1px solid var(--creme-200);
     border-radius: 12rem 12rem 0 0;
     overflow: hidden;
     text-align: center;
     text-decoration: none;
-    color: var(--cor-texto);
+    color: var(--marrom-900);
     transition: border-color 0.2s;
   }
 
   .categoria:hover {
-    border-color: var(--cor-dourado);
+    border-color: var(--verde-700);
+  }
+
+  .categoria h2 {
+    transition: color 0.2s;
+  }
+
+  .categoria:hover h2 {
+    color: var(--verde-700);
   }
 
   /* Moldura da foto com o topo em arco */
@@ -106,7 +114,7 @@ const total = (id: string) => tratamentos.filter((t) => t.data.categoria === id)
   }
 
   .texto p {
-    color: var(--cor-texto-suave);
+    color: var(--marrom-700);
     font-size: 0.98rem;
   }
 
@@ -115,11 +123,11 @@ const total = (id: string) => tratamentos.filter((t) => t.data.categoria === id)
     font-size: 0.85rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--cor-dourado-escuro);
+    color: var(--marrom-700);
   }
 
   .saiba-mais {
-    color: var(--cor-dourado-escuro);
+    color: var(--verde-700);
     letter-spacing: 0.05em;
   }
 

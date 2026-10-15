@@ -1,7 +1,9 @@
 ---
+import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import IconeWhatsapp from "../components/IconeWhatsapp.astro";
 import { clinica } from "../dados/clinica";
+import fotoRecepcao from "../assets/fotos/recepcao.jpg";
 
 // Seção 2: serviços organizados pelo que o paciente procura
 const cuidados = [
@@ -46,6 +48,18 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
 <BaseLayout titulo="Início">
   <!-- 1. Topo -->
   <section class="hero">
+    <!-- Foto decorativa de fundo (alt vazio). É a primeira imagem da página: carrega com prioridade. -->
+    <Image
+      class="hero-fundo"
+      src={fotoRecepcao}
+      alt=""
+      widths={[480, 720]}
+      sizes="(min-width: 761px) 50vw, 100vw"
+      loading="eager"
+      fetchpriority="high"
+      quality={80}
+    />
+    <div class="hero-veu" aria-hidden="true"></div>
     <div class="container hero-grade">
       <div class="hero-texto">
         <p class="sobretitulo">Clínica médica em Cuiabá</p>
@@ -61,7 +75,6 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
           <a class="botao botao-contorno" href="/tratamentos">Ver tratamentos</a>
         </div>
       </div>
-      <div class="hero-foto foto-provisoria">Foto real da clínica (TODO)</div>
     </div>
   </section>
 
@@ -146,20 +159,47 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
 <style>
   /* 1. Topo */
   .hero {
-    padding-block: clamp(3rem, 7vw, 5.5rem);
-    background: linear-gradient(180deg, var(--cor-fundo), var(--cor-areia));
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(4rem, 9vw, 7rem);
+    background: var(--creme-50);
   }
 
+  /* Foto na metade direita, cobrindo a altura toda da seção */
+  .hero-fundo {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 40% 60%;
+  }
+
+  /* Camada creme por cima: opaca do lado do texto, transparente do lado da foto */
+  .hero-veu {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to right,
+      var(--creme-50) 0%,
+      var(--creme-50) 55%,
+      color-mix(in srgb, var(--creme-50) 60%, transparent) 68%,
+      transparent 85%
+    );
+  }
+
+  /* O texto ocupa no máximo 55% da largura: sempre sobre a parte opaca */
   .hero-grade {
+    position: relative;
     display: grid;
     grid-template-columns: 1.1fr 0.9fr;
     align-items: center;
-    gap: clamp(2rem, 5vw, 4rem);
   }
 
   .hero-sub {
     font-size: 1.15rem;
-    color: var(--cor-texto-suave);
+    color: var(--marrom-700);
     max-width: 32rem;
   }
 
@@ -168,10 +208,6 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     flex-wrap: wrap;
     gap: 1rem;
     margin-top: 2rem;
-  }
-
-  .hero-foto {
-    aspect-ratio: 4 / 5;
   }
 
   /* 2. Cards */
@@ -188,13 +224,26 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     display: flex;
     flex-direction: column;
     padding: 2rem 1.75rem;
-    background: var(--cor-branco);
-    border: 1px solid var(--cor-nude);
+    background: var(--branco);
+    border: 1px solid var(--creme-200);
     text-align: center;
+    transition: border-color 0.2s;
+  }
+
+  .card:hover {
+    border-color: var(--verde-700);
+  }
+
+  .card h3 {
+    transition: color 0.2s;
+  }
+
+  .card:hover h3 {
+    color: var(--verde-700);
   }
 
   .card p {
-    color: var(--cor-texto-suave);
+    color: var(--marrom-700);
     font-size: 0.98rem;
     flex: 1;
   }
@@ -218,7 +267,7 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
   }
 
   .registro {
-    color: var(--cor-dourado-escuro);
+    color: var(--verde-700);
     letter-spacing: 0.05em;
   }
 
@@ -233,19 +282,19 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
   }
 
   .passos li {
-    border-top: 1px solid var(--cor-dourado);
+    border-top: 1px solid var(--dourado-400);
     padding-top: 1.25rem;
   }
 
   .numero {
     font-family: var(--fonte-titulo);
     font-size: 2.5rem;
-    color: var(--cor-dourado);
+    color: var(--dourado-400);
     line-height: 1;
   }
 
   .passos p {
-    color: var(--cor-texto-suave);
+    color: var(--marrom-700);
   }
 
   .centro {
@@ -272,9 +321,22 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     .medico {
       grid-template-columns: 1fr;
     }
-    .hero-foto {
-      max-width: 20rem;
-      margin-inline: auto;
+    /* No celular a foto vai para cima do texto e some aos poucos no creme */
+    .hero {
+      padding-top: 0;
+    }
+    .hero-fundo {
+      position: static;
+      width: 100%;
+      height: 16rem;
+      object-position: 40% 45%;
+      mask-image: linear-gradient(to bottom, black 65%, transparent);
+    }
+    .hero-veu {
+      display: none;
+    }
+    .hero-grade {
+      margin-top: 1.5rem;
     }
     .medico-foto {
       margin-inline: auto;

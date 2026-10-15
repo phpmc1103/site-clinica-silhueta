@@ -1,19 +1,43 @@
 /* Cores, fontes e reset do site inteiro.
-   Paleta inspirada no "Menu de Cuidados": nude, bege, areia e dourado. */
+   Paleta e regras de uso: ver a seção "Cores" do CLAUDE.md.
+   Os componentes usam só estas variáveis, nunca cor solta em hex. */
 
 :root {
-  --cor-fundo: #fbf7f2;
-  --cor-areia: #f2e9de;
-  --cor-nude: #e6d3c2;
-  --cor-texto: #3f3631;
-  --cor-texto-suave: #6b5e55;
-  --cor-dourado: #b8955f; /* linhas e detalhes decorativos */
-  --cor-dourado-escuro: #85663a; /* texto e botões (contraste suficiente) */
-  --cor-branco: #fffdfa;
+  /* Verde (marca) */
+  --verde-900: #12332e; /* fundo do rodapé */
+  --verde-700: #194842; /* cor da marca: header, títulos de destaque, links */
+  --verde-600: #3f6f68; /* links no hover, ícones */
+  --verde-500: #548a82; /* "Clínica" do logo, detalhes. NÃO usar em texto pequeno */
+  --verde-200: #c9dcd7; /* texto secundário sobre fundo verde */
+  --verde-50: #eef4f2; /* fundo suave de destaque (ex.: caixa de aviso) */
+
+  /* Creme (fundos) */
+  --creme-50: #fbf8f3; /* fundo da página; texto sobre fundo verde */
+  --creme-100: #f4ede3; /* fundo de seções alternadas */
+  --creme-200: #e8dccb; /* bordas, divisórias, bordas de cards */
+
+  /* Marrom (texto) */
+  --marrom-900: #3b2e26; /* texto principal e títulos */
+  --marrom-700: #6b5546; /* texto secundário, legendas */
+
+  /* Dourado (ação) */
+  --dourado-700: #8a6a3a; /* fundo dos botões de agendar (texto branco) */
+  --dourado-800: #7d5f33; /* hover dos botões */
+  --dourado-400: #b8955a; /* só decoração: linhas, sublinhado do menu ativo. NÃO usar em texto */
+
+  /* Branco: texto dos botões dourados e fundo de cards */
+  --branco: #ffffff;
+
+  /* Cores do WhatsApp: só no botão flutuante */
+  --whatsapp: #25d366;
+  --whatsapp-hover: #1ebe5d;
 
   /* TODO: trocar pelas fontes do Canva quando o cliente mandar */
-  --fonte-titulo: Georgia,  serif;
-  --fonte-texto: "Jost", Georgia, system-ui, sans-serif;
+  /* Reservas: se uma fonte não existir no aparelho (ou não carregar), o navegador
+     tenta a próxima da lista. Todas parecidas com a primeira; a última é a genérica. */
+  --fonte-titulo: Georgia, Cambria, "Times New Roman", Times, serif;
+  --fonte-texto: "Jost", Futura, "Century Gothic", "Avenir Next", "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
 
   --largura-max: 72rem;
 }
@@ -30,8 +54,8 @@ html {
 
 body {
   margin: 0;
-  background: var(--cor-fundo);
-  color: var(--cor-texto);
+  background: var(--creme-50);
+  color: var(--marrom-900);
   font-family: var(--fonte-texto);
   font-weight: 300;
   font-size: 1.0625rem;
@@ -53,13 +77,20 @@ h3 { font-size: 1.5rem; }
 
 p { margin: 0 0 1rem; }
 
-a { color: var(--cor-dourado-escuro); }
+a { color: var(--verde-700); }
+
+a:hover { color: var(--verde-600); }
 
 img { max-width: 100%; display: block; }
 
+/* Foco do teclado. Sobre fundo verde (header e rodapé) o contorno vira creme. */
 :focus-visible {
-  outline: 2px solid var(--cor-dourado-escuro);
+  outline: 2px solid var(--verde-700);
   outline-offset: 3px;
+}
+
+.fundo-verde :focus-visible {
+  outline-color: var(--creme-50);
 }
 
 /* Peças usadas em várias seções */
@@ -74,7 +105,7 @@ img { max-width: 100%; display: block; }
 }
 
 .secao-areia {
-  background: var(--cor-areia);
+  background: var(--creme-100);
 }
 
 .titulo-secao {
@@ -83,7 +114,7 @@ img { max-width: 100%; display: block; }
 }
 
 .titulo-secao p {
-  color: var(--cor-texto-suave);
+  color: var(--marrom-700);
   max-width: 36rem;
   margin-inline: auto;
 }
@@ -96,7 +127,7 @@ img { max-width: 100%; display: block; }
   font-size: 0.8rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--cor-dourado-escuro);
+  color: var(--verde-700);
   margin-bottom: 0.75rem;
 }
 
@@ -105,7 +136,7 @@ img { max-width: 100%; display: block; }
   content: "";
   width: 2rem;
   height: 1px;
-  background: var(--cor-dourado);
+  background: var(--dourado-400);
 }
 
 .botao {
@@ -114,8 +145,8 @@ img { max-width: 100%; display: block; }
   gap: 0.6rem;
   padding: 0.9rem 1.75rem;
   border-radius: 999px;
-  background: var(--cor-dourado-escuro);
-  color: var(--cor-branco);
+  background: var(--dourado-700);
+  color: var(--branco);
   font-weight: 400;
   letter-spacing: 0.04em;
   text-decoration: none;
@@ -123,25 +154,27 @@ img { max-width: 100%; display: block; }
 }
 
 .botao:hover {
-  background: var(--cor-texto);
+  background: var(--dourado-800);
+  color: var(--branco);
 }
 
 .botao-contorno {
   background: transparent;
-  color: var(--cor-dourado-escuro);
-  border: 1px solid var(--cor-dourado);
+  color: var(--verde-700);
+  border: 1px solid var(--verde-700);
 }
 
 .botao-contorno:hover {
-  background: var(--cor-areia);
+  background: var(--verde-50);
+  color: var(--verde-700);
 }
 
 /* Placeholder de foto. TODO: trocar pelas fotos reais da clínica */
 .foto-provisoria {
   display: grid;
   place-items: center;
-  background: linear-gradient(160deg, var(--cor-nude), var(--cor-areia));
-  color: var(--cor-texto-suave);
+  background: linear-gradient(160deg, var(--creme-200), var(--creme-100));
+  color: var(--marrom-700);
   font-size: 0.85rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
