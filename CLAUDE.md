@@ -82,6 +82,7 @@ As variáveis ficam em `src/styles/global.css`. **Usar só estas variáveis no s
 | `--creme-50` | #FBF8F3 | fundo da página; texto sobre fundo verde |
 | `--creme-100` | #F4EDE3 | fundo de seções alternadas |
 | `--creme-200` | #E8DCCB | bordas, divisórias, bordas de cards |
+| `--areia-100` | #EDE3D4 | fundo de seção de destaque (ex.: "O que você procura?") |
 | `--marrom-900` | #3B2E26 | texto principal e títulos |
 | `--marrom-700` | #6B5546 | texto secundário, legendas |
 | `--dourado-700` | #8A6A3A | fundo dos botões de agendar (texto branco) |
@@ -99,7 +100,7 @@ Regras de uso:
 - Rodapé: fundo `--verde-900`, texto `--creme-50`, links e texto secundário `--verde-200`.
 - Botão principal (agendar no WhatsApp): fundo `--dourado-700`, texto branco, hover `--dourado-800`. Exceção: o botão flutuante usa as cores do WhatsApp (`--whatsapp`, ícone branco). Botão secundário: borda `--verde-700`, texto `--verde-700`.
 - Cards: fundo `--creme-50` ou branco, borda `--creme-200`; no hover, borda ou título em `--verde-700`.
-- Detalhes decorativos (linhas do "TRATAMENTOS", sublinhado do menu ativo): `--dourado-400`.
+- Detalhes decorativos (sublinhado do menu ativo, cursor da frase digitada): `--dourado-400`. Sem linhas douradas separando seções, títulos ou passos: a separação é feita com espaço.
 - `--verde-500` e `--dourado-400` nunca em texto menor que 24px (contraste insuficiente).
 - Foco do teclado (`:focus-visible`): outline 2px `--verde-700` sobre fundo claro e `--creme-50` sobre fundo verde (classe `.fundo-verde` no elemento com fundo verde).
 - Logo: `logo-horizontal.svg` (verde) sobre fundo claro; `logo-horizontal-claro.svg` (creme) sobre fundo verde.

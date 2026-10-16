@@ -1,0 +1,77 @@
+---
+// Faixa fina acima do header, em todas as páginas, com atalho para agendar.
+import { clinica } from "../dados/clinica";
+---
+
+<div class="barra-agendamento">
+  <div class="container conteudo">
+    <p>
+      <strong>Agende sua avaliação</strong>
+      <span class="telefone">{clinica.whatsappTexto}</span>
+    </p>
+    <a class="agendar" href={clinica.whatsappLink} target="_blank" rel="noopener">
+      Agendar <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</div>
+
+<style>
+  /* Dourado claro (--dourado-400) com verde mais escuro (--verde-900):
+     com o --dourado-700 e o --verde-700, o contraste do texto fica baixo demais */
+  .barra-agendamento {
+    background: var(--dourado-400);
+    color: var(--verde-900);
+    font-size: 0.9rem;
+  }
+
+  .conteudo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 44px;
+    padding-block: 0.35rem;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  strong {
+    font-weight: 500;
+  }
+
+  .telefone {
+    margin-left: 0.75rem;
+  }
+
+  .agendar {
+    flex-shrink: 0;
+    padding: 0.2rem 1rem;
+    border: 1px solid var(--verde-900);
+    border-radius: 999px;
+    color: var(--verde-900);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    transition:
+      background 0.2s,
+      color 0.2s;
+  }
+
+  .agendar:hover {
+    background: var(--verde-900);
+    color: var(--dourado-400);
+  }
+
+  .agendar:focus-visible {
+    outline-color: var(--verde-900);
+  }
+
+  /* Celular: sem o telefone, para caber em uma linha */
+  @media (max-width: 639px) {
+    .telefone {
+      display: none;
+    }
+  }
+</style>

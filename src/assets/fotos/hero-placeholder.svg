@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <!-- Placeholder do hero até chegar a foto horizontal do consultório.
+       Cores da paleta da marca (ver "Cores" no CLAUDE.md). -->
+  <rect width="1920" height="1080" fill="#F4EDE3"/>
+
+  <!-- Arcos (topo arredondado), como os cards e molduras do site -->
+  <path d="M1040 1080V560a240 240 0 0 1 480 0v520z" fill="#E8DCCB"/>
+  <path d="M1400 1080V430a220 220 0 0 1 440 0v650z" fill="#E8DCCB" opacity="0.7"/>
+  <path d="M1120 1080V600a160 160 0 0 1 320 0v480" fill="none" stroke="#B8955A" stroke-width="2" opacity="0.6"/>
+  <path d="M1480 1080V470a140 140 0 0 1 280 0v610" fill="none" stroke="#B8955A" stroke-width="2" opacity="0.5"/>
+  <circle cx="1620" cy="230" r="70" fill="#B8955A" opacity="0.18"/>
+
+  <text x="1380" y="330" text-anchor="middle" fill="#6B5546" opacity="0.75"
+        font-family="Georgia, 'Times New Roman', serif" font-size="34">
+    Foto horizontal do consultório — 1920×1080
+  </text>
+</svg>

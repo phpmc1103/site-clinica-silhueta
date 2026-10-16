@@ -1,0 +1,34 @@
+---
+// Faz os elementos com a classe "revelar" aparecerem (fade + leve subida)
+// quando entram na tela. Os estilos ficam no global.css.
+// Elementos com "revelar-sequencia" que entram juntos aparecem um depois do outro.
+---
+
+<script>
+  const elementos = document.querySelectorAll<HTMLElement>(".revelar");
+  const menosMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (menosMovimento || !("IntersectionObserver" in window)) {
+    // Sem animação: mostra tudo de uma vez
+    elementos.forEach((el) => el.classList.add("visivel"));
+  } else {
+    const observador = new IntersectionObserver(
+      (entradas) => {
+        let ordem = 0;
+        for (const entrada of entradas) {
+          if (!entrada.isIntersecting) continue;
+          const el = entrada.target as HTMLElement;
+          // Atraso de 0,1s entre os cards que aparecem juntos
+          if (el.classList.contains("revelar-sequencia")) {
+            el.style.transitionDelay = `${ordem * 0.1}s`;
+            ordem++;
+          }
+          el.classList.add("visivel");
+          observador.unobserve(el); // aparece uma vez só
+        }
+      },
+      { rootMargin: "0px 0px -10% 0px" },
+    );
+    elementos.forEach((el) => observador.observe(el));
+  }
+</script>

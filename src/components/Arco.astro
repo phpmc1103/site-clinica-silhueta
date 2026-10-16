@@ -1,0 +1,25 @@
+---
+// Pequeno arco dourado decorativo, para pôr acima de um texto.
+// Uso: <Arco /> logo antes do texto. É só enfeite, então fica escondido do leitor de tela.
+---
+
+<svg
+  class="arco"
+  width="24"
+  height="16"
+  viewBox="0 0 24 16"
+  fill="none"
+  aria-hidden="true"
+  focusable="false"
+>
+  <!-- Topo em meio círculo e laterais retas, como as janelas em arco da marca -->
+  <path d="M2.75 16V11.25a9.25 9.25 0 0 1 18.5 0V16" stroke="currentColor" stroke-width="1.5" />
+</svg>
+
+<style>
+  .arco {
+    display: block;
+    color: var(--dourado-400);
+    margin-bottom: 0.75rem;
+  }
+</style>

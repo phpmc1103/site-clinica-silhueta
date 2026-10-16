@@ -1,35 +1,66 @@
 ---
 import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import IconeWhatsapp from "../components/IconeWhatsapp.astro";
+import SetaLonga from "../components/SetaLonga.astro";
+import CabecalhoSecao from "../components/CabecalhoSecao.astro";
 import { clinica } from "../dados/clinica";
-import fotoConsultorio from "../assets/fotos/consultorio.jpg";
+// Foto do topo: para trocar, mude só esta linha
+import fotoHero from "../assets/fotos/hero-placeholder.svg";
+// Fotos dos cards de tratamento
+// TODO: foto provisória tirada da internet; trocar por foto própria ou com licença de uso
+import fotoLinhasDeExpressao from "../assets/tratamentos/pele-madura.png";
 
-// Seção 2: serviços organizados pelo que o paciente procura
-const cuidados = [
+// Faixa verde: número de tratamentos (sem os programas).
+// Contado das páginas de tratamento, então se atualiza sozinho.
+const totalTratamentos = (
+  await getCollection("tratamentos", (t) => t.data.categoria !== "programas")
+).length;
+
+// Seção 2: serviços organizados pelo que o paciente procura.
+// Para pôr foto num card: importe a imagem no topo do arquivo e preencha `imagem` e `alt`.
+// Sem `imagem`, o card mostra o placeholder nude.
+type Cuidado = {
+  problema: string;
+  tratamentos: string;
+  href: string;
+  imagem?: ImageMetadata;
+  alt?: string; // descrição da foto (obrigatória quando houver imagem)
+};
+
+const cuidados: Cuidado[] = [
   {
     problema: "Linhas de expressão e rugas",
     tratamentos: "Toxina botulínica, preenchimento e fios de sustentação",
+    href: "/tratamentos/facial",
+    imagem: fotoLinhasDeExpressao,
+    alt: "Close da pele ao redor da boca, com rugas e linhas finas",
   },
   {
     problema: "Flacidez e perda de firmeza",
     tratamentos: "Ultraformer, Sculptra e Elleva",
+    href: "/tratamentos/facial",
   },
   {
     problema: "Manchas, textura e viço da pele",
     tratamentos: "Laser Lavieen, peeling, microagulhamento e limpeza de pele",
+    href: "/tratamentos/facial",
   },
   {
     problema: "Gordura localizada e contorno corporal",
     tratamentos: "Heccus Turbo, lipo enzimática, carboxiterapia e massagem modeladora",
+    href: "/tratamentos/corporal",
   },
   {
     problema: "Peso e composição corporal",
     tratamentos: "Protocolos de emagrecimento e de sarcopenia, com acompanhamento médico",
+    href: "/tratamentos/injetaveis",
   },
   {
     problema: "Cansaço, stress e bem-estar",
-    tratamentos: "Protocolo stress e ansiedade, reposição de vitaminas e massagem relaxante",
+    tratamentos: "Protocolo stress e ansiedade e reposição de vitaminas",
+    href: "/tratamentos/injetaveis",
   },
 ];
 
@@ -48,7 +79,19 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
 <BaseLayout titulo="Início">
   <!-- 1. Topo -->
   <section class="hero">
-    <div class="container hero-grade">
+    <!-- Foto de fundo decorativa (alt vazio). É a maior imagem da página: carrega com prioridade. -->
+    <Image
+      class="hero-fundo"
+      src={fotoHero}
+      alt=""
+      widths={[640, 960, 1280, 1920]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+      quality={80}
+    />
+
+    <div class="container">
       <div class="hero-texto">
         <p class="sobretitulo">Clínica médica em Cuiabá</p>
         <h1>Cuidado médico para a sua saúde, beleza e bem-estar</h1>
@@ -63,51 +106,86 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
           <a class="botao botao-contorno" href="/tratamentos">Ver tratamentos</a>
         </div>
       </div>
-
-      <!-- Foto decorativa (alt vazio). É a primeira imagem da página: carrega com prioridade. -->
-      <Image
-        class="hero-foto"
-        src={fotoConsultorio}
-        alt=""
-        widths={[400, 640, 960]}
-        sizes="(min-width: 761px) 40vw, 20rem"
-        loading="eager"
-        fetchpriority="high"
-        quality={80}
-      />
     </div>
   </section>
 
   <!-- 2. Cuidados por problema -->
-  <section class="secao">
+  <section
+    class="secao secao-cuidados transicao"
+    style="--cor-atual: var(--areia-100); --cor-proxima: var(--creme-50)"
+  >
     <div class="container">
-      <div class="titulo-secao">
-        <p class="sobretitulo">Tratamentos</p>
-        <h2>O que você procura?</h2>
-        <p>Escolha o que mais combina com você. Na consulta, o médico indica o caminho certo para o seu caso.</p>
-      </div>
+      <CabecalhoSecao apoio="Você não precisa saber o nome do procedimento. Comece pelo que quer cuidar, e o resto a gente explica na consulta.">
+        O que <em>você</em> procura?
+      </CabecalhoSecao>
       <ul class="cards">
         {cuidados.map((c) => (
-          <li class="card">
-            <h3>{c.problema}</h3>
-            <p>{c.tratamentos}</p>
-            <a href="/tratamentos">Saiba mais <span aria-hidden="true">→</span></a>
+          <li class="revelar revelar-sequencia">
+            <!-- O card inteiro é o link -->
+            <a class="card" href={c.href}>
+              <div class="card-moldura">
+                {c.imagem ? (
+                  <Image
+                    class="card-foto"
+                    src={c.imagem}
+                    alt={c.alt ?? ""}
+                    widths={[400, 640, 800]}
+                    sizes="(min-width: 1024px) 23rem, (min-width: 640px) 45vw, 90vw"
+                  />
+                ) : (
+                  <div class="card-foto card-foto-vazia" aria-hidden="true"></div>
+                )}
+              </div>
+              <div class="card-corpo">
+                <h3>{c.problema}</h3>
+                <p class="card-descricao">{c.tratamentos}</p>
+                <span class="saiba-mais">
+                  Saiba mais<SetaLonga />
+                </span>
+              </div>
+            </a>
           </li>
         ))}
       </ul>
     </div>
   </section>
 
-  <!-- 3. Quem cuida de você -->
-  <section class="secao secao-areia">
-    <div class="container medico">
-      <div class="medico-foto foto-provisoria">Foto do médico (TODO)</div>
+  <!-- Faixa da frase: digitada letra por letra quando entra na tela.
+       A frase inteira fica no HTML (Google e leitores de tela); o efeito é só visual. -->
+  <section class="faixa-frase">
+    <div class="container">
+      <p class="frase" data-digitar>
+        <span class="frase-texto">Cuidar de você começa com uma conversa.</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- Faixa verde: chamada para todos os tratamentos -->
+  <section class="faixa-todos fundo-verde">
+    <div class="container faixa-conteudo revelar">
       <div>
-        <p class="sobretitulo">Quem cuida de você</p>
+        <h2>Não encontrou o que procura?</h2>
+        <p>São {totalTratamentos} tratamentos entre facial, corporal e injetáveis.</p>
+      </div>
+      <a class="botao" href="/tratamentos">
+        Ver todos os tratamentos<SetaLonga />
+      </a>
+    </div>
+  </section>
+
+  <!-- 3. Quem cuida de você -->
+  <section
+    class="secao secao-areia transicao"
+    style="--cor-atual: var(--creme-100); --cor-proxima: var(--creme-50)"
+  >
+    <div class="container medico">
+      <div class="medico-foto foto-provisoria revelar">Foto do médico (TODO)</div>
+      <div>
+        <CabecalhoSecao>Quem <em>cuida</em> de você</CabecalhoSecao>
         <!-- TODO: nome, especialidade, CRM e RQE do responsável técnico -->
-        <h2>Dr(a). Nome Sobrenome</h2>
-        <p class="registro">Especialidade · CRM-MT 0000 · RQE 0000</p>
-        <p>
+        <h3 class="revelar">Dr(a). Nome Sobrenome</h3>
+        <p class="registro revelar">Especialidade · CRM-MT 0000 · RQE 0000</p>
+        <p class="revelar">
           Breve apresentação do médico responsável: formação, áreas de atuação e a forma de
           cuidar dos pacientes. Texto a ser escrito com o próprio médico.
         </p>
@@ -116,22 +194,27 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
   </section>
 
   <!-- 4. Como funciona -->
-  <section class="secao">
+  <section
+    class="secao transicao"
+    style="--cor-atual: var(--creme-50); --cor-proxima: var(--creme-100)"
+  >
     <div class="container">
-      <div class="titulo-secao">
-        <p class="sobretitulo">Como funciona</p>
-        <h2>Do primeiro contato ao tratamento</h2>
-      </div>
+      <CabecalhoSecao
+        apoio="Sem pressa e sem pacote pronto: cada etapa é conversada com você."
+        tituloLargo
+      >
+        Do primeiro contato ao <em>tratamento</em>
+      </CabecalhoSecao>
       <ol class="passos">
         {passos.map((p, i) => (
-          <li>
+          <li class="revelar revelar-sequencia">
             <span class="numero" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
             <h3>{p.titulo}</h3>
             <p>{p.texto}</p>
           </li>
         ))}
       </ol>
-      <div class="centro">
+      <div class="revelar">
         <a class="botao" href={clinica.whatsappLink} target="_blank" rel="noopener">
           <IconeWhatsapp /> Agendar pelo WhatsApp
         </a>
@@ -142,32 +225,111 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
   <!-- 5. A clínica -->
   <section class="secao secao-areia">
     <div class="container">
-      <div class="titulo-secao">
-        <p class="sobretitulo">A clínica</p>
-        <h2>Um espaço pensado para você</h2>
-        <p>{clinica.endereco}, no Centro Norte de Cuiabá.</p>
-      </div>
+      <CabecalhoSecao apoio={`${clinica.endereco}, em Cuiabá.`}>
+        Um espaço pensado para <em>você</em>
+      </CabecalhoSecao>
       <ul class="galeria">
         {ambientes.map((nome) => (
-          <li class="foto-provisoria">{nome} (TODO)</li>
+          <li class="foto-provisoria revelar revelar-sequencia">{nome} (TODO)</li>
         ))}
       </ul>
     </div>
   </section>
 </BaseLayout>
 
+<script>
+  // Frase "digitada": uma cópia só visual (aria-hidden) é escrita por cima da frase
+  // original, que fica transparente mas continua no HTML para o Google e leitores de tela.
+  // As letras ainda não digitadas ficam transparentes no lugar delas,
+  // então as quebras de linha não mudam durante a digitação.
+  const frase = document.querySelector<HTMLElement>("[data-digitar]");
+  const menosMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (frase && !menosMovimento && "IntersectionObserver" in window) {
+    const texto = frase.textContent?.trim() ?? "";
+    const copia = document.createElement("span");
+    copia.className = "frase-copia";
+    copia.setAttribute("aria-hidden", "true");
+    const digitado = document.createElement("span");
+    const cursor = document.createElement("span");
+    cursor.className = "cursor";
+    const resto = document.createElement("span");
+    resto.className = "resto";
+    resto.textContent = texto;
+    copia.append(digitado, cursor, resto);
+    frase.append(copia);
+    frase.classList.add("digitavel");
+
+    const observador = new IntersectionObserver(
+      ([entrada]) => {
+        if (!entrada.isIntersecting) return;
+        observador.disconnect();
+        let i = 0;
+        const intervalo = setInterval(() => {
+          i++;
+          digitado.textContent = texto.slice(0, i);
+          resto.textContent = texto.slice(i);
+          if (i >= texto.length) clearInterval(intervalo);
+        }, 55);
+      },
+      { threshold: 0.6 },
+    );
+    observador.observe(frase);
+  }
+</script>
+
 <style>
-  /* 1. Topo */
+  /* 1. Topo: foto de fundo + degradê creme por cima + texto à esquerda */
   .hero {
+    position: relative;
+    isolation: isolate; /* os z-index negativos ficam contidos na seção */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    min-height: 75vh;
     padding-block: clamp(3rem, 7vw, 5.5rem);
-    background: linear-gradient(180deg, var(--creme-50), var(--creme-100));
   }
 
-  .hero-grade {
-    display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    align-items: center;
-    gap: clamp(2rem, 5vw, 4rem);
+  .hero-fundo {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Degradê: creme sólido atrás do texto, transparente à direita */
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      to right,
+      var(--creme-50) 0%,
+      var(--creme-50) 35%,
+      color-mix(in srgb, var(--creme-50) 70%, transparent) 55%,
+      transparent 80%
+    );
+  }
+
+  /* Passagem para a seção seguinte: a parte de baixo do hero se dissolve
+     na cor de fundo dela (areia), sem linha de corte */
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: clamp(5rem, 14vw, 10rem);
+    z-index: -1;
+    background: linear-gradient(to bottom, transparent, var(--areia-100));
+    pointer-events: none;
+  }
+
+  /* O .container mantém a largura do global.css (alinhado com o header) */
+
+  .hero-texto {
+    max-width: 34rem;
   }
 
   .hero-sub {
@@ -183,54 +345,244 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     margin-top: 2rem;
   }
 
-  .hero-foto {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
+  /* Celular: degradê de baixo para cima, mais forte, e texto na parte de baixo */
+  @media (max-width: 767px) {
+    .hero {
+      align-items: flex-end;
+    }
+    .hero::before {
+      background: linear-gradient(
+        to top,
+        var(--creme-50) 0%,
+        var(--creme-50) 50%,
+        color-mix(in srgb, var(--creme-50) 80%, transparent) 70%,
+        color-mix(in srgb, var(--creme-50) 30%, transparent) 100%
+      );
+    }
   }
 
-  /* 2. Cards */
+  /* 2. O que você procura? (o cabeçalho está em components/CabecalhoSecao.astro) */
+  .secao-cuidados {
+    background: var(--areia-100);
+    /* menos espaço em cima que as outras seções; embaixo vem da .transicao */
+    padding-top: clamp(2.5rem, 6vw, 4rem);
+  }
+
+  /* 2. Cards: 1 coluna no celular, 2 no tablet, 3 no computador.
+     As colunas em fr dividem toda a largura do container. */
   .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: 1fr;
+    gap: 3rem 2rem; /* vertical, horizontal */
     list-style: none;
     margin: 0;
     padding: 0;
   }
 
+  @media (min-width: 640px) {
+    .cards {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .cards {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* Card sem caixa: moldura e texto direto sobre o fundo areia */
   .card {
     display: flex;
     flex-direction: column;
-    padding: 2rem 1.75rem;
-    background: var(--branco);
-    border: 1px solid var(--creme-200);
-    text-align: center;
-    transition: border-color 0.2s;
+    height: 100%;
+    color: var(--marrom-900);
+    text-align: left;
+    text-decoration: none;
   }
 
-  .card:hover {
-    border-color: var(--verde-700);
+  /* Moldura retangular 4:3 em toda a largura, bordas nítidas.
+     O overflow: hidden corta o zoom da foto dentro da moldura. */
+  .card-moldura {
+    aspect-ratio: 4 / 3;
+    border-radius: 4px;
+    overflow: hidden;
+    /* Fundo nude: aparece no placeholder, enquanto não houver foto */
+    background: linear-gradient(
+      170deg,
+      var(--creme-200),
+      color-mix(in srgb, var(--creme-200) 85%, var(--marrom-700))
+    );
+  }
+
+  /* cover: a foto preenche a moldura toda, sem faixas (corta o que sobrar) */
+  .card-foto {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.25s ease;
+  }
+
+  .card-corpo {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding-top: 1.25rem;
   }
 
   .card h3 {
-    transition: color 0.2s;
+    font-size: 1.625rem;
+    transition: color 0.25s ease;
   }
 
-  .card:hover h3 {
-    color: var(--verde-700);
-  }
-
-  .card p {
-    color: var(--marrom-700);
+  .card-descricao {
+    color: color-mix(in srgb, var(--marrom-900) 80%, transparent);
     font-size: 0.98rem;
-    flex: 1;
+    font-weight: 400;
+    margin-bottom: 0.75rem; /* espaço mínimo até o "Saiba mais" */
   }
 
-  .card a {
-    text-decoration: none;
+  /* margin-top: auto empurra o link para o fim do card: fica na mesma altura
+     em todos os cards da linha, qualquer que seja o tamanho da descrição */
+  .saiba-mais {
+    margin-top: auto;
+    color: var(--verde-700);
     letter-spacing: 0.05em;
+  }
+
+  /* Hover e foco do teclado: zoom na foto e título dourado.
+     A seta longa cresce sozinha (components/SetaLonga.astro) */
+  .card:hover,
+  .card:focus-visible {
+    color: var(--marrom-900);
+  }
+
+  .card:hover .card-foto,
+  .card:focus-visible .card-foto {
+    transform: scale(1.03);
+  }
+
+  /* --dourado-700: o 400 não tem contraste suficiente para texto */
+  .card:hover h3,
+  .card:focus-visible h3 {
+    color: var(--dourado-700);
+  }
+
+  .card:focus-visible {
+    outline: 2px solid var(--dourado-700);
+    outline-offset: 6px;
+  }
+
+  /* Quem pediu menos movimento no sistema: sem zoom */
+  @media (prefers-reduced-motion: reduce) {
+    .card-foto,
+    .card h3 {
+      transition: none;
+    }
+    .card:hover .card-foto,
+    .card:focus-visible .card-foto {
+      transform: none;
+    }
+  }
+
+  /* Faixa da frase: creme, muito espaço e a frase grande no centro */
+  .faixa-frase {
+    background: var(--creme-50); /* a passagem da areia vem da classe .transicao da seção acima */
+    /* 3rem em cima e embaixo. O de cima já viria da regra .transicao + section
+       (global.css), mas fica explícito aqui para os dois lados ficarem iguais */
+    padding-block: 3rem;
+  }
+
+  .frase {
+    position: relative; /* referência para a cópia digitada por cima */
+    max-width: 44rem;
+    margin: 0 auto;
+    font-family: var(--fonte-titulo);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.2;
+    text-align: center;
+    color: var(--marrom-900);
+  }
+
+  /* Com o efeito ligado, a frase original fica transparente (mas segue no HTML)
+     e a cópia por cima é que aparece letra por letra */
+  .frase.digitavel .frase-texto {
+    color: transparent;
+  }
+
+  /* :global porque esses elementos são criados pelo script, sem o atributo do escopo */
+  .frase :global(.frase-copia) {
+    position: absolute;
+    inset: 0;
+  }
+
+  .frase :global(.resto) {
+    color: transparent;
+  }
+
+  /* Cursor fino dourado, piscando. Largura líquida zero (margem negativa)
+     para não mudar as quebras de linha */
+  .frase :global(.cursor) {
+    display: inline-block;
+    width: 2px;
+    height: 0.9em;
+    margin-right: -2px;
+    vertical-align: -0.08em;
+    background: var(--dourado-400);
+    animation: piscar 1s steps(1) infinite;
+  }
+
+  @keyframes piscar {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  /* Faixa verde de largura total, com corte reto em cima e embaixo */
+  .faixa-todos {
+    background: var(--verde-700);
+    padding-block: 4rem;
+  }
+
+  .faixa-conteudo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.75rem;
+  }
+
+  .faixa-todos h2 {
+    font-size: clamp(1.9rem, 3.5vw, 2.5rem);
+    color: var(--creme-50);
+    margin-bottom: 0.5rem;
+  }
+
+  .faixa-todos p {
+    color: color-mix(in srgb, var(--creme-50) 80%, transparent);
+    margin: 0;
+  }
+
+  /* Computador: texto à esquerda e botão à direita, centralizados na vertical */
+  @media (min-width: 768px) {
+    .faixa-conteudo {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 3rem;
+    }
+    .faixa-todos .botao {
+      flex-shrink: 0; /* o botão não quebra em duas linhas */
+    }
+  }
+
+  /* Celular: tudo empilhado e botão na largura toda */
+  @media (max-width: 767px) {
+    .faixa-conteudo {
+      align-items: stretch;
+    }
+    .faixa-todos .botao {
+      justify-content: center;
+    }
   }
 
   /* 3. Médico */
@@ -251,34 +603,58 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     letter-spacing: 0.05em;
   }
 
-  /* 4. Passos */
+  /* 4. Passos: blocos areia da mesma altura, 1, 2 ou 4 por linha */
   .passos {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-    gap: 2rem;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
     list-style: none;
     margin: 0 0 3rem;
     padding: 0;
   }
 
+  @media (min-width: 640px) {
+    .passos {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .passos {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
   .passos li {
-    border-top: 1px solid var(--dourado-400);
-    padding-top: 1.25rem;
+    position: relative;
+    isolation: isolate; /* o número (z-index -1) fica atrás do texto, mas dentro do bloco */
+    overflow: hidden;
+    padding: 2rem;
+    background: var(--areia-100);
+    border-radius: 4px;
   }
 
+  /* Número como marca d'água no canto superior direito, atrás do texto */
   .numero {
+    position: absolute;
+    top: 0.75rem;
+    right: 1rem;
+    z-index: -1;
     font-family: var(--fonte-titulo);
-    font-size: 2.5rem;
-    color: var(--dourado-400);
+    font-size: 6rem;
     line-height: 1;
+    color: color-mix(in srgb, var(--dourado-400) 25%, transparent);
   }
 
+  .passos h3 {
+    margin-top: 2.5rem; /* começa abaixo da maior parte do número */
+  }
+
+  /* Mesmo estilo das descrições dos cards de tratamentos */
   .passos p {
-    color: var(--marrom-700);
-  }
-
-  .centro {
-    text-align: center;
+    color: color-mix(in srgb, var(--marrom-900) 80%, transparent);
+    font-weight: 400;
+    margin: 0;
   }
 
   /* 5. Galeria */
@@ -297,13 +673,8 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
 
   /* Celular: colunas viram uma só */
   @media (max-width: 760px) {
-    .hero-grade,
     .medico {
       grid-template-columns: 1fr;
-    }
-    .hero-foto {
-      max-width: 20rem;
-      margin-inline: auto;
     }
     .medico-foto {
       margin-inline: auto;

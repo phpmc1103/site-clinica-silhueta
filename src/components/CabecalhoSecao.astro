@@ -1,0 +1,66 @@
+---
+// Cabeçalho de seção no estilo editorial: título grande à esquerda, com uma
+// palavra-chave em <em> (itálico dourado), e texto de apoio opcional ao lado,
+// em itálico serifado. Uso:
+//   <CabecalhoSecao apoio="Texto de apoio">Um espaço pensado para <em>você</em></CabecalhoSecao>
+// Com `tituloLargo`, o título fica com 60% da largura no computador (para títulos longos).
+interface Props {
+  apoio?: string;
+  nivel?: "h1" | "h2";
+  tituloLargo?: boolean;
+}
+
+const { apoio, nivel = "h2", tituloLargo = false } = Astro.props;
+const Titulo = nivel;
+---
+
+<header class:list={["cabecalho", { "com-apoio": apoio, "titulo-largo": tituloLargo }]}>
+  <Titulo class="revelar"><slot /></Titulo>
+  {apoio && <p class="apoio revelar">{apoio}</p>}
+</header>
+
+<style>
+  .cabecalho {
+    display: grid;
+    gap: 1.5rem;
+    margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  h1,
+  h2 {
+    font-size: clamp(2.6rem, 6vw, 4.5rem);
+    line-height: 1.05;
+    margin: 0;
+  }
+
+  /* O <em> vem de quem usa o componente, por isso o :global.
+     --dourado-700 e não o 400: o 400 não tem contraste suficiente para texto */
+  .cabecalho :global(em) {
+    font-style: italic;
+    color: var(--dourado-700);
+  }
+
+  .apoio {
+    max-width: 30rem;
+    margin: 0;
+    font-family: var(--fonte-titulo);
+    font-style: italic;
+    font-size: 1.35rem;
+    line-height: 1.45;
+    color: var(--marrom-900);
+  }
+
+  /* Computador: título e apoio em duas colunas, alinhadas pela base */
+  @media (min-width: 768px) {
+    .com-apoio {
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+      gap: clamp(2rem, 5vw, 4rem);
+    }
+
+    /* Título com 60% da largura e apoio com o resto */
+    .com-apoio.titulo-largo {
+      grid-template-columns: 3fr 2fr;
+    }
+  }
+</style>

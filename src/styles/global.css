@@ -15,6 +15,7 @@
   --creme-50: #fbf8f3; /* fundo da página; texto sobre fundo verde */
   --creme-100: #f4ede3; /* fundo de seções alternadas */
   --creme-200: #e8dccb; /* bordas, divisórias, bordas de cards */
+  --areia-100: #ede3d4; /* fundo de seção de destaque, um pouco mais escuro que o creme-100 */
 
   /* Marrom (texto) */
   --marrom-900: #3b2e26; /* texto principal e títulos */
@@ -119,24 +120,13 @@ img { max-width: 100%; display: block; }
   margin-inline: auto;
 }
 
-/* Rótulo pequeno em caixa alta com linhas douradas dos lados */
+/* Rótulo pequeno em caixa alta (sem as linhas douradas dos lados) */
 .sobretitulo {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
   font-size: 0.8rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--verde-700);
   margin-bottom: 0.75rem;
-}
-
-.sobretitulo::before,
-.sobretitulo::after {
-  content: "";
-  width: 2rem;
-  height: 1px;
-  background: var(--dourado-400);
 }
 
 .botao {
@@ -180,4 +170,86 @@ img { max-width: 100%; display: block; }
   text-transform: uppercase;
   text-align: center;
   padding: 1rem;
+}
+
+/* Revelar ao rolar (script em components/RevelarAoRolar.astro).
+   Só esconde com JavaScript ligado (classe .js no <html>) e sem pedido de menos movimento. */
+@media (prefers-reduced-motion: no-preference) {
+  .js .revelar {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 0.6s ease,
+      transform 0.6s ease;
+  }
+
+  .js .revelar.visivel {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Transição em degradê no fim de uma seção, da cor dela para a cor da seção
+   seguinte, sem corte reto. Uso, na <section>:
+     class="transicao" style="--cor-atual: var(--creme-100); --cor-proxima: var(--creme-50)"
+   O degradê é bem alto (até 280px) para ser sutil. Ele cobre o padding de baixo
+   da seção e, se o padding for menor, continua para cima atrás do conteúdo
+   (z-index -1): não acrescenta altura. */
+.transicao {
+  --altura-transicao: clamp(4rem, 9vw, 6.5rem); /* padding de baixo: o mesmo das outras seções */
+  --altura-degrade: clamp(10rem, 25vw, 17.5rem); /* até 280px */
+  position: relative;
+  isolation: isolate; /* o degradê (z-index -1) fica atrás do conteúdo, dentro da seção */
+  padding-bottom: var(--altura-transicao);
+}
+
+/* A seção logo depois de uma transição já recebe o respiro do degradê:
+   o espaço de cima dela fica menor */
+.transicao + section {
+  padding-top: 3rem;
+}
+
+.transicao::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: var(--altura-degrade);
+  z-index: -1;
+  pointer-events: none;
+  /* Reserva para navegadores antigos */
+  background: linear-gradient(to bottom, var(--cor-atual), var(--cor-proxima));
+}
+
+/* 17 paradas numa curva ease-in-out suave, cubic-bezier(.3, .05, .7, .95),
+   calculadas uma vez em Python: as pontas mudam quase nada e o meio no máximo
+   1,36 vez mais rápido que uma reta, então não há um ponto onde a cor "vira".
+   Interpolação em oklab (e não oklch): os cremes têm quase nenhuma cor, e em
+   oklch o tom deles é instável e a mistura passa pelo rosa. O oklab mistura de
+   forma igualmente perceptual, sem girar o tom.
+   Fica num @supports porque, com var(), o navegador não volta sozinho para a
+   reserva quando não entende a sintaxe nova: o fundo ficaria transparente. */
+@supports (background: linear-gradient(in oklab, red, blue)) and
+  (color: color-mix(in oklab, red, blue)) {
+  .transicao::after {
+    background: linear-gradient(
+      in oklab to bottom,
+        var(--cor-atual) 0%,
+        color-mix(in oklab, var(--cor-proxima) 2.1%, var(--cor-atual)) 6.25%,
+        color-mix(in oklab, var(--cor-proxima) 6.1%, var(--cor-atual)) 12.5%,
+        color-mix(in oklab, var(--cor-proxima) 11.6%, var(--cor-atual)) 18.75%,
+        color-mix(in oklab, var(--cor-proxima) 18.1%, var(--cor-atual)) 25%,
+        color-mix(in oklab, var(--cor-proxima) 25.4%, var(--cor-atual)) 31.25%,
+        color-mix(in oklab, var(--cor-proxima) 33.3%, var(--cor-atual)) 37.5%,
+        color-mix(in oklab, var(--cor-proxima) 41.5%, var(--cor-atual)) 43.75%,
+        color-mix(in oklab, var(--cor-proxima) 50%, var(--cor-atual)) 50%,
+        color-mix(in oklab, var(--cor-proxima) 58.5%, var(--cor-atual)) 56.25%,
+        color-mix(in oklab, var(--cor-proxima) 66.7%, var(--cor-atual)) 62.5%,
+        color-mix(in oklab, var(--cor-proxima) 74.6%, var(--cor-atual)) 68.75%,
+        color-mix(in oklab, var(--cor-proxima) 81.9%, var(--cor-atual)) 75%,
+        color-mix(in oklab, var(--cor-proxima) 88.4%, var(--cor-atual)) 81.25%,
+        color-mix(in oklab, var(--cor-proxima) 93.9%, var(--cor-atual)) 87.5%,
+        color-mix(in oklab, var(--cor-proxima) 97.9%, var(--cor-atual)) 93.75%,
+        var(--cor-proxima) 100%
+    );
+  }
 }

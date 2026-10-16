@@ -1,0 +1,48 @@
+---
+// Seta longa e fina para links como "Saiba mais". Cresce quando o link
+// em volta recebe o mouse ou o foco do teclado. Usa a cor do texto do link.
+---
+
+<svg
+  class="seta-longa"
+  width="40"
+  height="10"
+  viewBox="0 0 40 10"
+  fill="none"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path d="M0 5H39M34 1l5 4-5 4" stroke="currentColor" stroke-width="1" />
+</svg>
+
+<style>
+  .seta-longa {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 0.5rem;
+    overflow: visible;
+    transform-origin: left center;
+    transition: transform 0.3s ease;
+  }
+
+  /* Dentro de .botao o espaço já vem do gap do botão */
+  :global(.botao) .seta-longa {
+    margin-left: 0;
+  }
+
+  /* Ao esticar, o traço continua com 1px */
+  path {
+    vector-effect: non-scaling-stroke;
+  }
+
+  :global(a:hover) .seta-longa,
+  :global(a:focus-visible) .seta-longa {
+    transform: scaleX(1.3);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .seta-longa {
+      transition: none;
+    }
+  }
+</style>

@@ -1,7 +1,9 @@
 ---
+import BarraAgendamento from "../components/BarraAgendamento.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import WhatsappFlutuante from "../components/WhatsappFlutuante.astro";
+import RevelarAoRolar from "../components/RevelarAoRolar.astro";
 import "../styles/global.css";
 
 const {
@@ -23,13 +25,18 @@ const {
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Jost:wght@300;400;500&display=swap"
     />
     <title>{titulo} | Clínica Silhueta</title>
+    <!-- Marca que o JavaScript está ligado. Só com essa classe os elementos
+         ".revelar" começam escondidos; sem JavaScript, tudo aparece normal. -->
+    <script is:inline>document.documentElement.classList.add("js");</script>
   </head>
   <body>
+    <BarraAgendamento />
     <Header />
     <main>
       <slot />
     </main>
     <Footer />
     <WhatsappFlutuante />
+    <RevelarAoRolar />
   </body>
 </html>
