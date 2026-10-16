@@ -3,7 +3,7 @@ import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import IconeWhatsapp from "../components/IconeWhatsapp.astro";
 import { clinica } from "../dados/clinica";
-import fotoRecepcao from "../assets/fotos/recepcao.jpg";
+import fotoConsultorio from "../assets/fotos/consultorio.jpg";
 
 // Seção 2: serviços organizados pelo que o paciente procura
 const cuidados = [
@@ -64,19 +64,17 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
         </div>
       </div>
 
-      <!-- Foto decorativa (alt vazio). É a primeira imagem da página: carrega com prioridade.
-           O quadro em volta recebe a máscara, para a foto e a camada creme sumirem juntas nas bordas. -->
-      <div class="hero-foto">
-        <Image
-          src={fotoRecepcao}
-          alt=""
-          widths={[400, 640, 960]}
-          sizes="(min-width: 761px) 40vw, 20rem"
-          loading="eager"
-          fetchpriority="high"
-          quality={80}
-        />
-      </div>
+      <!-- Foto decorativa (alt vazio). É a primeira imagem da página: carrega com prioridade. -->
+      <Image
+        class="hero-foto"
+        src={fotoConsultorio}
+        alt=""
+        widths={[400, 640, 960]}
+        sizes="(min-width: 761px) 40vw, 20rem"
+        loading="eager"
+        fetchpriority="high"
+        quality={80}
+      />
     </div>
   </section>
 
@@ -162,7 +160,7 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
   /* 1. Topo */
   .hero {
     padding-block: clamp(3rem, 7vw, 5.5rem);
-    background: var(--creme-50); /* cor única: a foto some sempre na mesma cor */
+    background: linear-gradient(180deg, var(--creme-50), var(--creme-100));
   }
 
   .hero-grade {
@@ -185,53 +183,11 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     margin-top: 2rem;
   }
 
-  /* Quadro da foto: some suavemente nos 4 lados, como se a foto não acabasse.
-     Mais longo à esquerda (35%) e embaixo (30%), mais curto em cima e à direita (12%).
-     Os dois degradês são combinados com "intersect": só aparece onde os dois deixam. */
   .hero-foto {
-    position: relative;
-    --mascara-horizontal: linear-gradient(
-      to right,
-      transparent 0%,
-      rgb(0 0 0 / 0.3) 12%,
-      rgb(0 0 0 / 0.7) 24%,
-      #000 35%,
-      #000 88%,
-      rgb(0 0 0 / 0.7) 92%,
-      rgb(0 0 0 / 0.3) 96%,
-      transparent 100%
-    );
-    --mascara-vertical: linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgb(0 0 0 / 0.3) 4%,
-      rgb(0 0 0 / 0.7) 8%,
-      #000 12%,
-      #000 70%,
-      rgb(0 0 0 / 0.7) 80%,
-      rgb(0 0 0 / 0.3) 90%,
-      transparent 100%
-    );
-    -webkit-mask-image: var(--mascara-horizontal), var(--mascara-vertical);
-    -webkit-mask-composite: source-in;
-    mask-image: var(--mascara-horizontal), var(--mascara-vertical);
-    mask-composite: intersect;
-  }
-
-  .hero-foto img {
     width: 100%;
     height: auto;
     aspect-ratio: 4 / 5;
     object-fit: cover;
-  }
-
-  /* Camada creme leve por cima, puxando a foto para os tons do fundo */
-  .hero-foto::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: var(--creme-100);
-    opacity: 0.25;
   }
 
   /* 2. Cards */
