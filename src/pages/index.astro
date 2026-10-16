@@ -1,7 +1,9 @@
 ---
+import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import IconeWhatsapp from "../components/IconeWhatsapp.astro";
 import { clinica } from "../dados/clinica";
+import fotoRecepcao from "../assets/fotos/recepcao.jpg";
 
 // Seção 2: serviços organizados pelo que o paciente procura
 const cuidados = [
@@ -61,7 +63,20 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
           <a class="botao botao-contorno" href="/tratamentos">Ver tratamentos</a>
         </div>
       </div>
-      <div class="hero-foto foto-provisoria">Foto real da clínica (TODO)</div>
+
+      <!-- Foto decorativa (alt vazio). É a primeira imagem da página: carrega com prioridade.
+           O quadro em volta recebe a máscara, para a foto e a camada creme sumirem juntas nas bordas. -->
+      <div class="hero-foto">
+        <Image
+          src={fotoRecepcao}
+          alt=""
+          widths={[400, 640, 960]}
+          sizes="(min-width: 761px) 40vw, 20rem"
+          loading="eager"
+          fetchpriority="high"
+          quality={80}
+        />
+      </div>
     </div>
   </section>
 
@@ -147,7 +162,7 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
   /* 1. Topo */
   .hero {
     padding-block: clamp(3rem, 7vw, 5.5rem);
-    background: linear-gradient(180deg, var(--cor-fundo), var(--cor-areia));
+    background: var(--creme-50); /* cor única: a foto some sempre na mesma cor */
   }
 
   .hero-grade {
@@ -159,7 +174,7 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
 
   .hero-sub {
     font-size: 1.15rem;
-    color: var(--cor-texto-suave);
+    color: var(--marrom-700);
     max-width: 32rem;
   }
 
@@ -170,8 +185,53 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     margin-top: 2rem;
   }
 
+  /* Quadro da foto: some suavemente nos 4 lados, como se a foto não acabasse.
+     Mais longo à esquerda (35%) e embaixo (30%), mais curto em cima e à direita (12%).
+     Os dois degradês são combinados com "intersect": só aparece onde os dois deixam. */
   .hero-foto {
+    position: relative;
+    --mascara-horizontal: linear-gradient(
+      to right,
+      transparent 0%,
+      rgb(0 0 0 / 0.3) 12%,
+      rgb(0 0 0 / 0.7) 24%,
+      #000 35%,
+      #000 88%,
+      rgb(0 0 0 / 0.7) 92%,
+      rgb(0 0 0 / 0.3) 96%,
+      transparent 100%
+    );
+    --mascara-vertical: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgb(0 0 0 / 0.3) 4%,
+      rgb(0 0 0 / 0.7) 8%,
+      #000 12%,
+      #000 70%,
+      rgb(0 0 0 / 0.7) 80%,
+      rgb(0 0 0 / 0.3) 90%,
+      transparent 100%
+    );
+    -webkit-mask-image: var(--mascara-horizontal), var(--mascara-vertical);
+    -webkit-mask-composite: source-in;
+    mask-image: var(--mascara-horizontal), var(--mascara-vertical);
+    mask-composite: intersect;
+  }
+
+  .hero-foto img {
+    width: 100%;
+    height: auto;
     aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+
+  /* Camada creme leve por cima, puxando a foto para os tons do fundo */
+  .hero-foto::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--creme-100);
+    opacity: 0.25;
   }
 
   /* 2. Cards */
@@ -188,13 +248,26 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     display: flex;
     flex-direction: column;
     padding: 2rem 1.75rem;
-    background: var(--cor-branco);
-    border: 1px solid var(--cor-nude);
+    background: var(--branco);
+    border: 1px solid var(--creme-200);
     text-align: center;
+    transition: border-color 0.2s;
+  }
+
+  .card:hover {
+    border-color: var(--verde-700);
+  }
+
+  .card h3 {
+    transition: color 0.2s;
+  }
+
+  .card:hover h3 {
+    color: var(--verde-700);
   }
 
   .card p {
-    color: var(--cor-texto-suave);
+    color: var(--marrom-700);
     font-size: 0.98rem;
     flex: 1;
   }
@@ -218,7 +291,7 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
   }
 
   .registro {
-    color: var(--cor-dourado-escuro);
+    color: var(--verde-700);
     letter-spacing: 0.05em;
   }
 
@@ -233,19 +306,19 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
   }
 
   .passos li {
-    border-top: 1px solid var(--cor-dourado);
+    border-top: 1px solid var(--dourado-400);
     padding-top: 1.25rem;
   }
 
   .numero {
     font-family: var(--fonte-titulo);
     font-size: 2.5rem;
-    color: var(--cor-dourado);
+    color: var(--dourado-400);
     line-height: 1;
   }
 
   .passos p {
-    color: var(--cor-texto-suave);
+    color: var(--marrom-700);
   }
 
   .centro {

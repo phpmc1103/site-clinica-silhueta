@@ -1,13 +1,15 @@
 ---
+import { Image } from "astro:assets";
 import { clinica } from "../dados/clinica";
+import logoHorizontalClaro from "../assets/logo/logo-horizontal-claro.svg";
 
 const ano = new Date().getFullYear();
 ---
 
-<footer class="footer" id="contato">
+<footer class="footer fundo-verde" id="contato">
   <div class="container colunas">
     <div>
-      <p class="logo-nome">Silhueta</p>
+      <Image class="logo" src={logoHorizontalClaro} alt="Clínica Silhueta" />
       <p class="suave">Clínica médica em Cuiabá. Há mais de 30 anos cuidando da sua saúde e do seu bem-estar.</p>
       <!-- TODO: nome, CRM e RQE do responsável técnico -->
       <p class="suave pequeno">Responsável técnico: Dr(a). Nome Sobrenome · CRM-MT 0000</p>
@@ -56,8 +58,8 @@ const ano = new Date().getFullYear();
 
 <style>
   .footer {
-    background: var(--cor-texto);
-    color: var(--cor-areia);
+    background: var(--verde-900);
+    color: var(--creme-50);
     padding-top: 4rem;
     font-size: 0.95rem;
   }
@@ -68,12 +70,10 @@ const ano = new Date().getFullYear();
     gap: 2.5rem;
   }
 
-  .logo-nome {
-    font-family: var(--fonte-titulo);
-    font-size: 2rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
+  .logo {
+    height: 3.5rem;
+    width: auto;
+    margin-bottom: 1.25rem;
   }
 
   h2 {
@@ -82,10 +82,10 @@ const ano = new Date().getFullYear();
     font-weight: 400;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--cor-nude);
+    color: var(--verde-200);
     padding-bottom: 0.6rem;
     margin-bottom: 1rem;
-    border-bottom: 1px solid var(--cor-dourado);
+    border-bottom: 1px solid var(--dourado-400);
   }
 
   address {
@@ -102,11 +102,15 @@ const ano = new Date().getFullYear();
   }
 
   a {
-    color: var(--cor-branco);
+    color: var(--verde-200);
+  }
+
+  a:hover {
+    color: var(--creme-50);
   }
 
   .suave {
-    color: var(--cor-nude);
+    color: var(--verde-200);
   }
 
   .pequeno {
@@ -133,9 +137,9 @@ const ano = new Date().getFullYear();
     gap: 0.5rem;
     margin-top: 2.5rem;
     padding-block: 1.5rem;
-    border-top: 1px solid rgb(184 149 95 / 0.4);
+    border-top: 1px solid color-mix(in srgb, var(--dourado-400) 40%, transparent);
     font-size: 0.85rem;
-    color: var(--cor-nude);
+    color: var(--verde-200);
   }
 
   .rodape-final p {

@@ -1,7 +1,11 @@
 ---
+import { Image } from "astro:assets";
+import logoHorizontalClaro from "../assets/logo/logo-horizontal-claro.svg";
+
 const links = [
   { href: "/", texto: "Início" },
   { href: "/tratamentos", texto: "Tratamentos" },
+  { href: "/programas", texto: "Programas" },
   { href: "/noticias", texto: "Notícias" },
   { href: "/contato", texto: "Contato" },
 ];
@@ -12,15 +16,13 @@ const ativo = (href: string) =>
   href === "/" ? atual === "/" : atual.startsWith(href);
 ---
 
-<header class="header">
+<!-- Marcador invisível no topo da página: quando sai da tela, o header fica compacto -->
+<div class="sentinela" aria-hidden="true"></div>
+
+<header class="header fundo-verde">
   <div class="container barra">
     <a href="/" class="logo">
-      <!-- TODO: trocar pelo símbolo da clínica (<Image> de astro:assets) quando o cliente mandar -->
-      <span class="logo-simbolo" aria-hidden="true"></span>
-      <span class="logo-texto">
-        <span class="logo-nome">Silhueta</span>
-        <span class="logo-sub">Clínica Médica</span>
-      </span>
+      <Image src={logoHorizontalClaro} alt="Clínica Silhueta" loading="eager" />
     </a>
 
     <nav aria-label="Principal">
@@ -37,10 +39,38 @@ const ativo = (href: string) =>
   </div>
 </header>
 
+<script>
+  // Liga o modo compacto quando o marcador do topo sai da tela, e desliga quando volta.
+  // IntersectionObserver avisa só nessas mudanças, sem rodar código a cada rolagem.
+  const header = document.querySelector(".header");
+  const sentinela = document.querySelector(".sentinela");
+
+  if (header && sentinela) {
+    new IntersectionObserver(([entrada]) => {
+      header.toggleAttribute("data-compacto", !entrada.isIntersecting);
+    }).observe(sentinela);
+  }
+</script>
+
 <style>
+  /* Altura de rolagem a partir da qual o header encolhe */
+  .sentinela {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 6rem;
+    pointer-events: none;
+  }
+
+  /* Fica preso no topo da tela enquanto a página rola */
   .header {
-    background: var(--cor-fundo);
-    border-bottom: 1px solid var(--cor-nude);
+    position: sticky;
+    top: 0;
+    z-index: 40; /* acima do conteúdo, abaixo do botão de WhatsApp (50) */
+    background: var(--verde-700);
+    border-bottom: 1px solid var(--verde-900);
+    transition: box-shadow 0.3s;
   }
 
   .barra {
@@ -49,52 +79,26 @@ const ativo = (href: string) =>
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem 2rem;
-    padding-block: 1rem;
+    padding-block: 1.5rem;
+    transition: padding 0.3s;
   }
 
   .logo {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    text-decoration: none;
-    color: var(--cor-texto);
+    display: block;
   }
 
-  /* Espaço reservado para o símbolo da clínica */
-  .logo-simbolo {
-    width: 3rem;
-    height: 3rem;
-    border: 1px dashed var(--cor-dourado);
-    border-radius: 50%;
-    background: var(--cor-areia);
+  /* A largura acompanha a altura, mantendo a proporção do SVG */
+  .logo img {
+    height: 4.25rem;
+    width: auto;
+    transition: height 0.3s;
   }
 
-  .logo-texto {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    line-height: 1;
-  }
-
-  .logo-nome {
-    font-family: var(--fonte-titulo);
-    font-size: 1.9rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
-  .logo-sub {
-    font-size: 0.65rem;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    color: var(--cor-dourado-escuro);
-    margin-top: 0.3rem;
-  }
-
+  /* Menu: só texto; a página atual ganha um sublinhado dourado */
   ul {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem 0.75rem;
+    gap: 0.25rem 1.75rem;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -102,19 +106,45 @@ const ativo = (href: string) =>
 
   nav a {
     display: inline-block;
-    font-size: 0.95rem;
-    letter-spacing: 0.05em;
-    text-decoration: none;
-    color: var(--cor-texto);
-    padding: 0.45rem 1.1rem;
-    border: 1px solid var(--cor-nude);
-    border-radius: 999px;
+    padding-block: 0.5rem; /* área de toque maior no celular */
+    font-weight: 500;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+    color: var(--creme-50);
+    text-decoration: underline 2px transparent;
+    text-underline-offset: 6px;
+    transition: text-decoration-color 0.2s;
   }
 
-  nav a:hover,
+  nav a:hover {
+    color: var(--creme-50);
+    text-decoration-color: var(--verde-200);
+  }
+
   nav a[aria-current="page"] {
-    border-color: var(--cor-dourado);
-    background: var(--cor-areia);
+    text-decoration-color: var(--dourado-400);
+  }
+
+  /* Header compacto: aparece depois que a página rola */
+  .header[data-compacto] {
+    box-shadow: 0 4px 16px color-mix(in srgb, var(--verde-900) 30%, transparent);
+  }
+
+  .header[data-compacto] .barra {
+    padding-block: 0.6rem;
+  }
+
+  .header[data-compacto] .logo img {
+    height: 3rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .header,
+    .barra,
+    .logo img,
+    nav a {
+      transition: none;
+    }
   }
 
   /* No celular o menu vai para a linha de baixo, ocupando a largura toda */
@@ -125,6 +155,16 @@ const ativo = (href: string) =>
     }
     ul {
       justify-content: space-between;
+      gap: 0.25rem 1rem;
+    }
+    .barra {
+      padding-block: 1rem 0.25rem;
+    }
+    .logo img {
+      height: 3rem;
+    }
+    .header[data-compacto] .logo img {
+      height: 2.5rem;
     }
   }
 </style>

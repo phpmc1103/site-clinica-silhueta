@@ -1,0 +1,151 @@
+---
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import IconeWhatsapp from "../../components/IconeWhatsapp.astro";
+import { clinica } from "../../dados/clinica";
+import { categorias } from "../../dados/categorias";
+
+const tratamentos = await getCollection("tratamentos");
+
+// Quantos tratamentos cada categoria tem (aparece no card)
+const total = (id: string) => tratamentos.filter((t) => t.data.categoria === id).length;
+---
+
+<BaseLayout
+  titulo="Tratamentos"
+  descricao="Tratamentos faciais, corporais e injetáveis da Clínica Silhueta, em Cuiabá. Agende sua avaliação pelo WhatsApp."
+>
+  <section class="secao lista">
+    <div class="container">
+      <!-- Título só para leitor de tela e buscadores: a página precisa de um h1 -->
+      <h1 class="visualmente-oculto">Nossos tratamentos</h1>
+
+      <ul class="categorias">
+        {categorias.map((c) => (
+          <li>
+            <a class="categoria" href={`/tratamentos/${c.id}`}>
+              {c.imagem ? (
+                <Image class="foto" src={c.imagem} alt="" widths={[400, 800]} sizes="(min-width: 60rem) 25vw, 90vw" />
+              ) : (
+                <div class="foto foto-provisoria">Foto {c.titulo} (TODO)</div>
+              )}
+              <div class="texto">
+                <h2>{c.titulo}</h2>
+                <p>{c.descricao}</p>
+                <p class="total">{total(c.id)} tratamentos</p>
+                <span class="saiba-mais">Saiba mais <span aria-hidden="true">→</span></span>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="secao secao-areia">
+    <div class="container titulo-secao final">
+      <h2>Não sabe qual escolher?</h2>
+      <p>Fale com a gente. Na consulta de avaliação, o médico indica o caminho certo para você.</p>
+      <a class="botao" href={clinica.whatsappLink} target="_blank" rel="noopener">
+        <IconeWhatsapp /> Agendar pelo WhatsApp
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Sem o título visível, os cards começam logo abaixo do menu */
+  .lista {
+    padding-top: clamp(2rem, 5vw, 3rem);
+  }
+
+  .categorias {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* O card inteiro é o link */
+  .categoria {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--branco);
+    border: 1px solid var(--creme-200);
+    border-radius: 12rem 12rem 0 0;
+    overflow: hidden;
+    text-align: center;
+    text-decoration: none;
+    color: var(--marrom-900);
+    transition: border-color 0.2s;
+  }
+
+  .categoria:hover {
+    border-color: var(--verde-700);
+  }
+
+  .categoria h2 {
+    transition: color 0.2s;
+  }
+
+  .categoria:hover h2 {
+    color: var(--verde-700);
+  }
+
+  /* Moldura da foto com o topo em arco */
+  .foto {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: center 35%;
+  }
+
+  .texto {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1.75rem 1.5rem 2rem;
+  }
+
+  .texto p {
+    color: var(--marrom-700);
+    font-size: 0.98rem;
+  }
+
+  .texto .total {
+    flex: 1;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--marrom-700);
+  }
+
+  .saiba-mais {
+    color: var(--verde-700);
+    letter-spacing: 0.05em;
+  }
+
+  .categoria:hover .saiba-mais {
+    text-decoration: underline;
+  }
+
+  .final {
+    margin-bottom: 0;
+  }
+
+  /* Texto só para leitor de tela */
+  .visualmente-oculto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>

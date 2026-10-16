@@ -1,0 +1,28 @@
+---
+import { getCollection } from "astro:content";
+import DetalheTratamento from "../../components/DetalheTratamento.astro";
+import { categorias } from "../../dados/categorias";
+
+// Gera uma página para cada tratamento: /tratamentos/sculptra, /tratamentos/peeling...
+// Os programas ficam de fora: eles têm suas páginas em /programas/[id].
+// Convive com [categoria].astro porque nenhum id de tratamento é igual a um id de categoria.
+export async function getStaticPaths() {
+  // TODO: antes da Fase 4, esconder rascunhos em produção
+  // (ex.: filtrar com `import.meta.env.PROD ? !t.data.rascunho : true`)
+  const tratamentos = await getCollection("tratamentos", (t) => t.data.categoria !== "programas");
+  return tratamentos.map((tratamento) => ({
+    params: { id: tratamento.id },
+    props: { tratamento },
+  }));
+}
+
+const { tratamento } = Astro.props;
+const categoria = categorias.find((c) => c.id === tratamento.data.categoria)!;
+---
+
+<DetalheTratamento
+  tratamento={tratamento}
+  nomeCategoria={categoria.titulo}
+  linkVoltar={`/tratamentos/${categoria.id}`}
+  linkLista={{ href: "/tratamentos", texto: "Todos os tratamentos" }}
+/>

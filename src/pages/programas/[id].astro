@@ -1,0 +1,24 @@
+---
+import { getCollection } from "astro:content";
+import DetalheTratamento from "../../components/DetalheTratamento.astro";
+
+// Gera uma página para cada programa: /programas/beauty-club e /programas/protocolos-personalizados.
+// Os programas estão na mesma coleção dos tratamentos, com categoria: "programas".
+export async function getStaticPaths() {
+  // TODO: antes da Fase 4, esconder rascunhos em produção
+  const programas = await getCollection("tratamentos", (t) => t.data.categoria === "programas");
+  return programas.map((programa) => ({
+    params: { id: programa.id },
+    props: { programa },
+  }));
+}
+
+const { programa } = Astro.props;
+---
+
+<DetalheTratamento
+  tratamento={programa}
+  nomeCategoria="Programas"
+  linkVoltar="/programas"
+  linkLista={{ href: "/programas", texto: "Todos os programas" }}
+/>

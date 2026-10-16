@@ -24,13 +24,15 @@ import { clinica } from "../dados/clinica";
     width: 3.75rem;
     height: 3.75rem;
     border-radius: 50%;
-    background: #1f7a4d; /* verde do WhatsApp escurecido para dar contraste */
-    color: #fff;
-    box-shadow: 0 6px 20px rgb(63 54 49 / 0.25);
-    transition: transform 0.2s;
+    background: var(--whatsapp); /* verde do próprio WhatsApp, para ser reconhecido na hora */
+    color: var(--branco);
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--marrom-900) 25%, transparent);
+    transition: transform 0.2s, background 0.2s;
   }
 
   .flutuante:hover {
+    background: var(--whatsapp-hover);
+    color: var(--branco);
     transform: scale(1.06);
   }
 </style>

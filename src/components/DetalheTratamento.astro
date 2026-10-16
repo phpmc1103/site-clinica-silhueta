@@ -1,0 +1,109 @@
+---
+// Página de detalhe de um tratamento ou programa.
+// Usado por /tratamentos/[id] e /programas/[id].
+import { render, type CollectionEntry } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import IconeWhatsapp from "./IconeWhatsapp.astro";
+import { clinica } from "../dados/clinica";
+
+interface Props {
+  tratamento: CollectionEntry<"tratamentos">;
+  nomeCategoria: string;
+  linkVoltar: string;
+  // Link do final da página ("Todos os tratamentos", "Todos os programas")
+  linkLista: { href: string; texto: string };
+}
+
+const { tratamento, nomeCategoria, linkVoltar, linkLista } = Astro.props;
+const { titulo, resumo, imagem } = tratamento.data;
+const { Content } = await render(tratamento);
+
+const mensagem = `Olá! Gostaria de agendar uma avaliação de ${titulo}.`;
+const whatsappLink = `https://wa.me/${clinica.whatsappNumero}?text=${encodeURIComponent(mensagem)}`;
+---
+
+<BaseLayout titulo={titulo} descricao={`${resumo} Clínica Silhueta, em Cuiabá.`}>
+  <section class="topo">
+    <div class="container">
+      <a class="voltar" href={linkVoltar}><span aria-hidden="true">←</span> {nomeCategoria}</a>
+      <div class="titulo-secao">
+        <p class="sobretitulo">{nomeCategoria}</p>
+        <h1>{titulo}</h1>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao">
+    <div class="container estreito">
+      {imagem && <img class="foto" src={imagem} alt={titulo} loading="lazy" />}
+
+      <div class="conteudo">
+        <Content />
+      </div>
+
+      <!-- TODO: trocar pelos dados do responsável técnico (nome, CRM, RQE) -->
+      <div class="quem-conduz">
+        <h2>Quem conduz</h2>
+        <p>Dr(a). Nome do médico · CRM-MT 00000 · RQE 00000 (provisório)</p>
+      </div>
+
+      <div class="agendar">
+        <a class="botao" href={whatsappLink} target="_blank" rel="noopener">
+          <IconeWhatsapp /> Agendar pelo WhatsApp
+        </a>
+      </div>
+
+      <a class="voltar" href={linkLista.href}><span aria-hidden="true">←</span> {linkLista.texto}</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .topo {
+    padding-block: clamp(2rem, 5vw, 3rem) 0;
+  }
+
+  .topo .titulo-secao {
+    margin-bottom: 0;
+  }
+
+  .voltar {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    text-decoration: none;
+  }
+
+  .voltar:hover {
+    text-decoration: underline;
+  }
+
+  .estreito {
+    max-width: 46rem;
+  }
+
+  /* Moldura da foto com o topo em arco */
+  .foto {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 12rem 12rem 0 0;
+    margin-bottom: 2.5rem;
+  }
+
+  .quem-conduz {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--dourado-400);
+  }
+
+  .quem-conduz p {
+    color: var(--marrom-700);
+  }
+
+  .agendar {
+    margin-block: 2.5rem;
+    text-align: center;
+  }
+</style>
