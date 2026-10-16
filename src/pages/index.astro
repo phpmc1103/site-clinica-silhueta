@@ -48,18 +48,6 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
 <BaseLayout titulo="Início">
   <!-- 1. Topo -->
   <section class="hero">
-    <!-- Foto decorativa de fundo (alt vazio). É a primeira imagem da página: carrega com prioridade. -->
-    <Image
-      class="hero-fundo"
-      src={fotoRecepcao}
-      alt=""
-      widths={[480, 720]}
-      sizes="(min-width: 761px) 50vw, 100vw"
-      loading="eager"
-      fetchpriority="high"
-      quality={80}
-    />
-    <div class="hero-veu" aria-hidden="true"></div>
     <div class="container hero-grade">
       <div class="hero-texto">
         <p class="sobretitulo">Clínica médica em Cuiabá</p>
@@ -74,6 +62,20 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
           </a>
           <a class="botao botao-contorno" href="/tratamentos">Ver tratamentos</a>
         </div>
+      </div>
+
+      <!-- Foto decorativa (alt vazio). É a primeira imagem da página: carrega com prioridade.
+           O quadro em volta recebe a máscara, para a foto e a camada creme sumirem juntas nas bordas. -->
+      <div class="hero-foto">
+        <Image
+          src={fotoRecepcao}
+          alt=""
+          widths={[400, 640, 960]}
+          sizes="(min-width: 761px) 40vw, 20rem"
+          loading="eager"
+          fetchpriority="high"
+          quality={80}
+        />
       </div>
     </div>
   </section>
@@ -159,42 +161,15 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
 <style>
   /* 1. Topo */
   .hero {
-    position: relative;
-    overflow: hidden;
-    padding-block: clamp(4rem, 9vw, 7rem);
-    background: var(--creme-50);
+    padding-block: clamp(3rem, 7vw, 5.5rem);
+    background: var(--creme-50); /* cor única: a foto some sempre na mesma cor */
   }
 
-  /* Foto na metade direita, cobrindo a altura toda da seção */
-  .hero-fundo {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 50%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 40% 60%;
-  }
-
-  /* Camada creme por cima: opaca do lado do texto, transparente do lado da foto */
-  .hero-veu {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      to right,
-      var(--creme-50) 0%,
-      var(--creme-50) 55%,
-      color-mix(in srgb, var(--creme-50) 60%, transparent) 68%,
-      transparent 85%
-    );
-  }
-
-  /* O texto ocupa no máximo 55% da largura: sempre sobre a parte opaca */
   .hero-grade {
-    position: relative;
     display: grid;
     grid-template-columns: 1.1fr 0.9fr;
     align-items: center;
+    gap: clamp(2rem, 5vw, 4rem);
   }
 
   .hero-sub {
@@ -208,6 +183,55 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     flex-wrap: wrap;
     gap: 1rem;
     margin-top: 2rem;
+  }
+
+  /* Quadro da foto: some suavemente nos 4 lados, como se a foto não acabasse.
+     Mais longo à esquerda (35%) e embaixo (30%), mais curto em cima e à direita (12%).
+     Os dois degradês são combinados com "intersect": só aparece onde os dois deixam. */
+  .hero-foto {
+    position: relative;
+    --mascara-horizontal: linear-gradient(
+      to right,
+      transparent 0%,
+      rgb(0 0 0 / 0.3) 12%,
+      rgb(0 0 0 / 0.7) 24%,
+      #000 35%,
+      #000 88%,
+      rgb(0 0 0 / 0.7) 92%,
+      rgb(0 0 0 / 0.3) 96%,
+      transparent 100%
+    );
+    --mascara-vertical: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgb(0 0 0 / 0.3) 4%,
+      rgb(0 0 0 / 0.7) 8%,
+      #000 12%,
+      #000 70%,
+      rgb(0 0 0 / 0.7) 80%,
+      rgb(0 0 0 / 0.3) 90%,
+      transparent 100%
+    );
+    -webkit-mask-image: var(--mascara-horizontal), var(--mascara-vertical);
+    -webkit-mask-composite: source-in;
+    mask-image: var(--mascara-horizontal), var(--mascara-vertical);
+    mask-composite: intersect;
+  }
+
+  .hero-foto img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+
+  /* Camada creme leve por cima, puxando a foto para os tons do fundo */
+  .hero-foto::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--creme-100);
+    opacity: 0.25;
   }
 
   /* 2. Cards */
@@ -321,22 +345,9 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     .medico {
       grid-template-columns: 1fr;
     }
-    /* No celular a foto vai para cima do texto e some aos poucos no creme */
-    .hero {
-      padding-top: 0;
-    }
-    .hero-fundo {
-      position: static;
-      width: 100%;
-      height: 16rem;
-      object-position: 40% 45%;
-      mask-image: linear-gradient(to bottom, black 65%, transparent);
-    }
-    .hero-veu {
-      display: none;
-    }
-    .hero-grade {
-      margin-top: 1.5rem;
+    .hero-foto {
+      max-width: 20rem;
+      margin-inline: auto;
     }
     .medico-foto {
       margin-inline: auto;
