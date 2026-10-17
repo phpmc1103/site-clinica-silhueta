@@ -372,12 +372,18 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     padding-top: clamp(2.5rem, 6vw, 4rem);
   }
 
+  /* Menos espaço entre o título e os cards só nesta seção
+     (o padrão das outras seções fica em CabecalhoSecao.astro) */
+  .secao-cuidados :global(.cabecalho) {
+    margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
+  }
+
   /* 2. Cards: 1 coluna no celular, 2 no tablet, 3 no computador.
      As colunas em fr dividem toda a largura do container. */
   .cards {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 3rem 2rem; /* vertical, horizontal */
+    gap: 1.5rem 2rem; /* vertical, horizontal */
     list-style: none;
     margin: 0;
     padding: 0;
@@ -405,10 +411,10 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     text-decoration: none;
   }
 
-  /* Moldura retangular 16:10 em toda a largura, bordas nítidas.
+  /* Moldura retangular 2:1 em toda a largura, bordas nítidas.
      O overflow: hidden corta o zoom da foto dentro da moldura. */
   .card-moldura {
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 2 / 1;
     border-radius: 4px;
     overflow: hidden;
     /* Fundo nude: aparece no placeholder, enquanto não houver foto */
@@ -446,7 +452,7 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     color: color-mix(in srgb, var(--marrom-900) 80%, transparent);
     font-size: 0.98rem;
     font-weight: 400;
-    margin-bottom: 0.75rem; /* espaço mínimo até o "Saiba mais" */
+    margin-bottom: 0.25rem; /* espaço mínimo até o "Saiba mais" */
   }
 
   /* margin-top: auto empurra o link para o fim do card: fica na mesma altura
