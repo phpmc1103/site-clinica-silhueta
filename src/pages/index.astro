@@ -370,6 +370,9 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     background: var(--areia-100);
     /* menos espaço em cima que as outras seções; embaixo vem da .transicao */
     padding-top: clamp(2.5rem, 6vw, 4rem);
+    /* Espaço de baixo menor que o padrão da .transicao (até 6.5rem), para a frase
+       "Cuidar de você..." ficar perto dos cards. O degradê continua com a mesma altura */
+    --altura-transicao: 1.5rem;
   }
 
   /* Menos espaço entre o título e os cards só nesta seção
