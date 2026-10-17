@@ -41,6 +41,10 @@
     "Helvetica Neue", Arial, sans-serif;
 
   --largura-max: 72rem;
+
+  /* Fotos (classe .foto-arco, mais abaixo) */
+  --arco-card: 50% 50% 0 0 / 35% 35% 0 0; /* topo em arco suave, base reta */
+  --filtro-foto: sepia(15%) saturate(85%); /* leve e quente, pele continua natural */
 }
 
 *,
@@ -170,6 +174,18 @@ img { max-width: 100%; display: block; }
   text-transform: uppercase;
   text-align: center;
   padding: 1rem;
+}
+
+/* Moldura de foto com o topo em arco, como no Menu de Cuidados.
+   Vale para foto (<img>) e para placeholder sem foto: os dois ficam com o mesmo formato.
+   Quem usa define a proporção (aspect-ratio) e o fundo do placeholder. */
+.foto-arco {
+  border-radius: var(--arco-card);
+  overflow: hidden;
+}
+
+.foto-arco img {
+  filter: var(--filtro-foto);
 }
 
 /* Revelar ao rolar (script em components/RevelarAoRolar.astro).

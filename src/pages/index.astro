@@ -126,7 +126,7 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
           <li class="revelar revelar-sequencia">
             <!-- O card inteiro é o link -->
             <a class="card" href={c.href}>
-              <div class="card-moldura">
+              <div class="card-moldura foto-arco">
                 {c.imagem ? (
                   <Image
                     class="card-foto"
@@ -383,7 +383,7 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
   .cards {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1.5rem 2rem; /* vertical, horizontal */
+    gap: 1rem 2rem; /* vertical, horizontal */
     list-style: none;
     margin: 0;
     padding: 0;
@@ -411,12 +411,10 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     text-decoration: none;
   }
 
-  /* Moldura retangular 2:1 em toda a largura, bordas nítidas.
-     O overflow: hidden corta o zoom da foto dentro da moldura. */
+  /* Moldura 5:2 em toda a largura. Topo em arco, overflow: hidden (corta o zoom
+     da foto) e filtro quente vêm da classe .foto-arco (styles/global.css) */
   .card-moldura {
-    aspect-ratio: 2 / 1;
-    border-radius: 4px;
-    overflow: hidden;
+    aspect-ratio: 5 / 2;
     /* Fundo nude: aparece no placeholder, enquanto não houver foto */
     background: linear-gradient(
       170deg,
@@ -440,11 +438,13 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     display: flex;
     flex-direction: column;
     flex: 1;
-    padding-top: 1.25rem;
+    padding-top: 0.875rem;
   }
 
+  /* Pequeno para "Gordura localizada e contorno corporal" caber em uma linha */
   .card h3 {
-    font-size: 1.625rem;
+    font-size: 1.2rem;
+    margin-bottom: 0.3rem;
     transition: color 0.25s ease;
   }
 
@@ -452,7 +452,14 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     color: color-mix(in srgb, var(--marrom-900) 80%, transparent);
     font-size: 0.98rem;
     font-weight: 400;
+    line-height: 1.5;
     margin-bottom: 0.25rem; /* espaço mínimo até o "Saiba mais" */
+    /* No máximo 2 linhas; se passar, termina em "..." */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
   }
 
   /* margin-top: auto empurra o link para o fim do card: fica na mesma altura
