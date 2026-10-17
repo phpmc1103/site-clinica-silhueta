@@ -179,3 +179,12 @@ pnpm-debug.log*
 
 # Contexto privado do Claude Code
 CLAUDE.local.md
+
+# Variáveis locais da Cloudflare (podem ter segredos)
+.dev.vars
+
+# Relatório de segurança (privado)
+docs/seguranca.md
+
+# Contexto local do Claude, em qualquer variação de nome
+[Cc][Ll][Aa][Uu][Dd][Ee][.-][Ll][Oo][Cc][Aa][Ll].md
