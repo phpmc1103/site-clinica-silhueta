@@ -27,6 +27,8 @@ type Cuidado = {
   href: string;
   imagem?: ImageMetadata;
   alt?: string; // descrição da foto (obrigatória quando houver imagem)
+  // Zoom na foto, ancorado à direita, para cortar o fundo (1 = sem zoom)
+  zoom?: number;
 };
 
 const cuidados: Cuidado[] = [
@@ -36,6 +38,7 @@ const cuidados: Cuidado[] = [
     href: "/tratamentos/facial",
     imagem: fotoLinhasDeExpressao,
     alt: "Close da pele ao redor da boca, com rugas e linhas finas",
+    zoom: 1.2, // esconde o fundo bege à esquerda do rosto
   },
   {
     problema: "Flacidez e perda de firmeza",
@@ -131,6 +134,7 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
                     alt={c.alt ?? ""}
                     widths={[400, 640, 800]}
                     sizes="(min-width: 1024px) 23rem, (min-width: 640px) 45vw, 90vw"
+                    style={c.zoom ? `--zoom: ${c.zoom}` : undefined}
                   />
                 ) : (
                   <div class="card-foto card-foto-vazia" aria-hidden="true"></div>
@@ -420,6 +424,9 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     width: 100%;
     height: 100%;
     object-fit: cover;
+    /* scale (separado de transform) soma com o zoom do hover sem um apagar o outro */
+    scale: var(--zoom, 1);
+    transform-origin: right center;
     transition: transform 0.25s ease;
   }
 
