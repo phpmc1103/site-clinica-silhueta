@@ -10,7 +10,7 @@ import { clinica } from "../dados/clinica";
 import fotoHero from "../assets/fotos/hero-placeholder.svg";
 // Fotos dos cards de tratamento
 // TODO: foto provisória tirada da internet; trocar por foto própria ou com licença de uso
-import fotoLinhasDeExpressao from "../assets/tratamentos/pele-madura.png";
+import fotoLinhasDeExpressao from "../assets/tratamentos/linhas-de-expressao.png";
 
 // Faixa verde: número de tratamentos (sem os programas).
 // Contado das páginas de tratamento, então se atualiza sozinho.
@@ -401,10 +401,10 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     text-decoration: none;
   }
 
-  /* Moldura retangular 4:3 em toda a largura, bordas nítidas.
+  /* Moldura retangular 16:10 em toda a largura, bordas nítidas.
      O overflow: hidden corta o zoom da foto dentro da moldura. */
   .card-moldura {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 16 / 10;
     border-radius: 4px;
     overflow: hidden;
     /* Fundo nude: aparece no placeholder, enquanto não houver foto */
