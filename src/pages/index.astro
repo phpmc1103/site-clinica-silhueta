@@ -383,7 +383,7 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
   .cards {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1rem 2rem; /* vertical, horizontal */
+    gap: 1.5rem 2rem; /* vertical, horizontal */
     list-style: none;
     margin: 0;
     padding: 0;
@@ -411,10 +411,10 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     text-decoration: none;
   }
 
-  /* Moldura 5:2 em toda a largura. Topo em arco, overflow: hidden (corta o zoom
+  /* Moldura 16:9 em toda a largura. Topo em arco, overflow: hidden (corta o zoom
      da foto) e filtro quente vêm da classe .foto-arco (styles/global.css) */
   .card-moldura {
-    aspect-ratio: 5 / 2;
+    aspect-ratio: 16 / 9;
     /* Fundo nude: aparece no placeholder, enquanto não houver foto */
     background: linear-gradient(
       170deg,
@@ -438,13 +438,14 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     display: flex;
     flex-direction: column;
     flex: 1;
-    padding-top: 0.875rem;
+    padding-top: 1.25rem;
   }
 
-  /* Pequeno para "Gordura localizada e contorno corporal" caber em uma linha */
+  /* Maior tamanho em que "Gordura localizada e contorno corporal" cabe em uma linha
+     (medido em 1440px; com 1.325rem já quebra) */
   .card h3 {
-    font-size: 1.2rem;
-    margin-bottom: 0.3rem;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
     transition: color 0.25s ease;
   }
 
@@ -453,7 +454,7 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     font-size: 0.98rem;
     font-weight: 400;
     line-height: 1.5;
-    margin-bottom: 0.25rem; /* espaço mínimo até o "Saiba mais" */
+    margin-bottom: 0.5rem; /* espaço mínimo até o "Saiba mais" */
     /* No máximo 2 linhas; se passar, termina em "..." */
     display: -webkit-box;
     -webkit-box-orient: vertical;
