@@ -47,7 +47,7 @@ const cuidados: Cuidado[] = [
   },
   {
     problema: "Manchas, textura e viço da pele",
-    tratamentos: "Laser Lavieen, peeling, microagulhamento e limpeza de pele",
+    tratamentos: "Laser Lavieen, peeling e microagulhamento",
     href: "/tratamentos/facial",
   },
   {
@@ -126,7 +126,7 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
           <li class="revelar revelar-sequencia">
             <!-- O card inteiro é o link -->
             <a class="card" href={c.href}>
-              <div class="card-moldura foto-arco">
+              <div class="card-moldura foto-moldura">
                 {c.imagem ? (
                   <Image
                     class="card-foto"
@@ -154,16 +154,6 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     </div>
   </section>
 
-  <!-- Faixa da frase: digitada letra por letra quando entra na tela.
-       A frase inteira fica no HTML (Google e leitores de tela); o efeito é só visual. -->
-  <section class="faixa-frase">
-    <div class="container">
-      <p class="frase" data-digitar>
-        <span class="frase-texto">Cuidar de você começa com uma conversa.</span>
-      </p>
-    </div>
-  </section>
-
   <!-- Faixa verde: chamada para todos os tratamentos -->
   <section class="faixa-todos fundo-verde">
     <div class="container faixa-conteudo revelar">
@@ -174,6 +164,16 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
       <a class="botao" href="/tratamentos">
         Ver todos os tratamentos<SetaLonga />
       </a>
+    </div>
+  </section>
+
+  <!-- Faixa da frase: digitada letra por letra quando entra na tela.
+       A frase inteira fica no HTML (Google e leitores de tela); o efeito é só visual. -->
+  <section class="faixa-frase">
+    <div class="container">
+      <p class="frase" data-digitar>
+        <span class="frase-texto">Cuidar de você começa com uma conversa.</span>
+      </p>
     </div>
   </section>
 
@@ -414,8 +414,8 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     text-decoration: none;
   }
 
-  /* Moldura 16:9 em toda a largura. Topo em arco, overflow: hidden (corta o zoom
-     da foto) e filtro quente vêm da classe .foto-arco (styles/global.css) */
+  /* Moldura 16:9 em toda a largura. Cantos, overflow: hidden (corta o zoom
+     da foto) e filtro quente vêm da classe .foto-moldura (styles/global.css) */
   .card-moldura {
     aspect-ratio: 16 / 9;
     /* Fundo nude: aparece no placeholder, enquanto não houver foto */
@@ -511,9 +511,7 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
 
   /* Faixa da frase: creme, muito espaço e a frase grande no centro */
   .faixa-frase {
-    background: var(--creme-50); /* a passagem da areia vem da classe .transicao da seção acima */
-    /* 3rem em cima e embaixo. O de cima já viria da regra .transicao + section
-       (global.css), mas fica explícito aqui para os dois lados ficarem iguais */
+    background: var(--creme-50); /* vem logo depois da faixa verde */
     padding-block: 3rem;
   }
 
