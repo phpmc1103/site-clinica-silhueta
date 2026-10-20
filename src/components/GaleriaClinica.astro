@@ -1,0 +1,156 @@
+---
+// Galeria em loop infinito ("marquee") com as fotos da clínica.
+// Lê sozinha todas as imagens de src/assets/clinica/: para pôr uma foto nova,
+// basta salvar o arquivo lá (nome em minúsculas, sem acento e sem espaço).
+// Uso: <GaleriaClinica />
+import { Image } from "astro:assets";
+
+const arquivos = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/clinica/*.{jpg,jpeg,png,webp,avif,JPG,JPEG,PNG,WEBP,AVIF}",
+  { eager: true },
+);
+
+// Texto alternativo e enquadramento de cada foto, pelo nome do arquivo (sem extensão).
+// Foto sem entrada aqui usa o texto padrão. `posicao` escolhe que parte da foto
+// aparece quando ela é cortada (object-position).
+const detalhes: Record<string, { alt: string; posicao?: string }> = {
+  "recepcao-2": {
+    alt: "Recepção com poltronas bege diante de uma parede de pedra iluminada e a frase \"Sua melhor versão começa aqui\"",
+  },
+  "consultorio-2": {
+    alt: "Consultório com mesa de madeira, jaleco na cadeira e estante com livros",
+  },
+  "sala-1": {
+    alt: "Sala de procedimentos com maca forrada, toalha com o logo da Silhueta e a frase \"Time to relax!\" na parede",
+    posicao: "center 12%", // mostra a frase "Time to relax!" e a maca
+  },
+  "sala-2": {
+    alt: "Cantinho infantil da sala de espera, com mesa, cadeiras verdes e brinquedos",
+  },
+};
+
+const fotos = Object.entries(arquivos)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([caminho, modulo]) => {
+    const nome = caminho.split("/").pop()!.replace(/\.[^.]+$/, "");
+    return {
+      imagem: modulo.default,
+      alt: detalhes[nome]?.alt ?? "Ambiente da Clínica Silhueta",
+      posicao: detalhes[nome]?.posicao,
+    };
+  });
+
+// Uma "volta" precisa ser mais larga que a área visível (até 72rem), senão sobra
+// um buraco no fim de cada volta. Com poucas fotos, a lista se repete até ter
+// pelo menos MINIMO_POR_VOLTA itens.
+const MINIMO_POR_VOLTA = 8;
+const repeticoes = Math.max(1, Math.ceil(MINIMO_POR_VOLTA / fotos.length));
+const volta = Array.from({ length: repeticoes }, () => fotos).flat();
+
+// A volta aparece duas vezes seguidas. A faixa anda metade do próprio tamanho
+// (uma volta inteira) e recomeça: como a segunda metade está no mesmo lugar onde
+// a primeira começou, o recomeço não aparece.
+// Só a primeira aparição de cada foto conta para leitores de tela; as outras
+// são cópias (aria-hidden e alt vazio).
+const itens = [...volta, ...volta].map((f, i) => ({ ...f, copia: i >= fotos.length }));
+---
+
+<div class="galeria" role="region" aria-label="Fotos da clínica" style={`--total: ${volta.length}`}>
+  <ul class="faixa">
+    {itens.map((f) => (
+      <li aria-hidden={f.copia ? "true" : undefined} class:list={{ copia: f.copia }}>
+        <div class="foto-moldura">
+          <Image
+            src={f.imagem}
+            alt={f.copia ? "" : f.alt}
+            width={512}
+            widths={[256, 512]}
+            sizes="(max-width: 640px) 11rem, 16rem"
+            loading="lazy"
+            style={f.posicao ? `object-position: ${f.posicao}` : undefined}
+          />
+        </div>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .galeria {
+    --segundos-por-foto: 6s; /* velocidade: quanto maior, mais devagar */
+    --largura-foto: 16rem;
+    --espaco: 0.625rem; /* metade do espaço entre duas fotos */
+    overflow: hidden;
+    /* Bordas esfumaçadas. A máscara só usa a transparência da cor,
+       então qualquer variável opaca serve */
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      var(--marrom-900) 8%,
+      var(--marrom-900) 92%,
+      transparent
+    );
+  }
+
+  .faixa {
+    display: flex;
+    width: max-content;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    animation: rolar calc(var(--total) * var(--segundos-por-foto)) linear infinite;
+  }
+
+  /* Espaço por padding em cada foto (não gap): assim a metade da faixa
+     mede exatamente uma lista inteira e o loop não dá salto */
+  .faixa li {
+    flex: none;
+    width: var(--largura-foto);
+    padding-inline: var(--espaco);
+  }
+
+  /* Cantos e filtro quente vêm da .foto-moldura (styles/global.css) */
+  .foto-moldura {
+    aspect-ratio: 3 / 4;
+  }
+
+  .foto-moldura img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .galeria:hover .faixa {
+    animation-play-state: paused;
+  }
+
+  @keyframes rolar {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Celular: fotos menores e espaço menor */
+  @media (max-width: 640px) {
+    .galeria {
+      --largura-foto: 11rem;
+      --espaco: 0.375rem;
+    }
+  }
+
+  /* Quem pediu menos movimento no sistema: sem animação, a faixa rola com o dedo
+     ou o trackpad. As cópias (que só existem para o loop) somem, e as bordas também */
+  @media (prefers-reduced-motion: reduce) {
+    .galeria {
+      overflow-x: auto;
+      mask-image: none;
+    }
+    .faixa {
+      animation: none;
+    }
+    .faixa .copia {
+      display: none;
+    }
+  }
+</style>

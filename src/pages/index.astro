@@ -5,6 +5,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import IconeWhatsapp from "../components/IconeWhatsapp.astro";
 import SetaLonga from "../components/SetaLonga.astro";
 import CabecalhoSecao from "../components/CabecalhoSecao.astro";
+import GaleriaClinica from "../components/GaleriaClinica.astro";
 import { clinica } from "../dados/clinica";
 // Foto do topo: para trocar, mude só esta linha
 import fotoHero from "../assets/fotos/hero-placeholder.svg";
@@ -74,9 +75,6 @@ const passos = [
   { titulo: "Plano de cuidado", texto: "Você recebe um plano com as etapas, os cuidados e as orientações." },
   { titulo: "Acompanhamento", texto: "Retornos para acompanhar a evolução e ajustar o que for preciso." },
 ];
-
-// Seção 5: ambientes (TODO: fotos reais)
-const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala de espera"];
 ---
 
 <BaseLayout titulo="Início">
@@ -169,7 +167,10 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
 
   <!-- Faixa da frase: digitada letra por letra quando entra na tela.
        A frase inteira fica no HTML (Google e leitores de tela); o efeito é só visual. -->
-  <section class="faixa-frase">
+  <section
+    class="faixa-frase transicao"
+    style="--cor-atual: var(--creme-50); --cor-proxima: var(--creme-100)"
+  >
     <div class="container">
       <p class="frase" data-digitar>
         <span class="frase-texto">Cuidar de você começa com uma conversa.</span>
@@ -232,11 +233,7 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
       <CabecalhoSecao apoio={`${clinica.endereco}, em Cuiabá.`}>
         Um espaço pensado para <em>você</em>
       </CabecalhoSecao>
-      <ul class="galeria">
-        {ambientes.map((nome) => (
-          <li class="foto-provisoria revelar revelar-sequencia">{nome} (TODO)</li>
-        ))}
-      </ul>
+      <GaleriaClinica />
     </div>
   </section>
 </BaseLayout>
@@ -513,6 +510,9 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
   .faixa-frase {
     background: var(--creme-50); /* vem logo depois da faixa verde */
     padding-block: 3rem;
+    /* Degradê (classe .transicao) do creme até a cor de "Quem cuida de você",
+       ocupando a faixa inteira: sem 100%, ele subiria por cima da faixa verde */
+    --altura-degrade: 100%;
   }
 
   .frase {
@@ -677,20 +677,6 @@ const ambientes = ["Recepção", "Consultório", "Sala de procedimentos", "Sala 
     color: color-mix(in srgb, var(--marrom-900) 80%, transparent);
     font-weight: 400;
     margin: 0;
-  }
-
-  /* 5. Galeria */
-  .galeria {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-    gap: 1.25rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .galeria li {
-    aspect-ratio: 3 / 4;
   }
 
   /* Celular: colunas viram uma só */
