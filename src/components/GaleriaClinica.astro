@@ -81,15 +81,6 @@ const itens = [...volta, ...volta].map((f, i) => ({ ...f, copia: i >= fotos.leng
     --largura-foto: 16rem;
     --espaco: 0.625rem; /* metade do espaço entre duas fotos */
     overflow: hidden;
-    /* Bordas esfumaçadas. A máscara só usa a transparência da cor,
-       então qualquer variável opaca serve */
-    mask-image: linear-gradient(
-      to right,
-      transparent,
-      var(--marrom-900) 8%,
-      var(--marrom-900) 92%,
-      transparent
-    );
   }
 
   .faixa {
@@ -140,11 +131,10 @@ const itens = [...volta, ...volta].map((f, i) => ({ ...f, copia: i >= fotos.leng
   }
 
   /* Quem pediu menos movimento no sistema: sem animação, a faixa rola com o dedo
-     ou o trackpad. As cópias (que só existem para o loop) somem, e as bordas também */
+     ou o trackpad. As cópias (que só existem para o loop) somem */
   @media (prefers-reduced-motion: reduce) {
     .galeria {
       overflow-x: auto;
-      mask-image: none;
     }
     .faixa {
       animation: none;
