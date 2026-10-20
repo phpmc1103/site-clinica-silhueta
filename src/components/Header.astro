@@ -167,4 +167,31 @@ const ativo = (href: string) =>
       height: 2.5rem;
     }
   }
+
+  /* Celular: os 5 itens numa linha só. Fonte e espaço diminuem com a largura
+     da tela (clamp). Se mesmo assim não couber (telas muito estreitas), o menu
+     rola de lado, sem barra visível; a página nunca rola */
+  @media (max-width: 640px) {
+    ul {
+      flex-wrap: nowrap;
+      gap: clamp(0.4rem, 3vw, 1rem);
+      overflow-x: auto;
+      scrollbar-width: none; /* Firefox */
+    }
+    ul::-webkit-scrollbar {
+      display: none; /* Chrome e Safari */
+    }
+    li {
+      flex: none;
+    }
+    nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px; /* área de toque mínima recomendada */
+      padding-block: 0;
+      font-size: clamp(0.75rem, 3.7vw, 1rem);
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+  }
 </style>
