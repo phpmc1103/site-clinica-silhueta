@@ -4,8 +4,8 @@
 
 :root {
   /* Verde (marca) */
-  --verde-900: #12332e; /* fundo do rodapé */
-  --verde-700: #194842; /* cor da marca: header, títulos de destaque, links */
+  --verde-900: #12332e; /* texto sobre o dourado claro (faixa de agendamento), sombras, linha embaixo do header */
+  --verde-700: #194842; /* cor da marca: header, rodapé, títulos de destaque, links */
   --verde-600: #3f6f68; /* links no hover, ícones */
   --verde-500: #548a82; /* "Clínica" do logo, detalhes. NÃO usar em texto pequeno */
   --verde-200: #c9dcd7; /* texto secundário sobre fundo verde */

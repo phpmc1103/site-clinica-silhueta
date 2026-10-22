@@ -73,8 +73,8 @@ As variáveis ficam em `src/styles/global.css`. **Usar só estas variáveis no s
 
 | Variável | Hex | Uso |
 | --- | --- | --- |
-| `--verde-900` | #12332E | fundo do rodapé |
-| `--verde-700` | #194842 | cor da marca: header, títulos de destaque, links |
+| `--verde-900` | #12332E | texto sobre o dourado claro (faixa de agendamento), sombras, linha embaixo do header |
+| `--verde-700` | #194842 | cor da marca: header, rodapé, títulos de destaque, links |
 | `--verde-600` | #3F6F68 | links no hover, ícones |
 | `--verde-500` | #548A82 | "Clínica" do logo, detalhes. **Não usar em texto pequeno** |
 | `--verde-200` | #C9DCD7 | texto secundário sobre fundo verde |
@@ -96,8 +96,8 @@ Regras de uso:
 
 - Fundo da página: `--creme-50`. Seções alternadas: `--creme-100`.
 - Texto: `--marrom-900` (principal) e `--marrom-700` (secundário). Títulos podem ser `--marrom-900` ou `--verde-700`.
-- Header: fundo `--verde-700`, texto e logo em `--creme-50`, texto secundário em `--verde-200`.
-- Rodapé: fundo `--verde-900`, texto `--creme-50`, links e texto secundário `--verde-200`.
+- Header: fundo `--verde-700` (o mesmo do rodapé), texto e logo em `--creme-50`, texto secundário em `--verde-200`.
+- Rodapé: fundo `--verde-700` (o mesmo do header), texto `--creme-50`, links e texto secundário `--verde-200`.
 - Botão principal (agendar no WhatsApp): fundo `--dourado-700`, texto branco, hover `--dourado-800`. Exceção: o botão flutuante usa as cores do WhatsApp (`--whatsapp`, ícone branco). Botão secundário: borda `--verde-700`, texto `--verde-700`.
 - Cards: fundo `--creme-50` ou branco, borda `--creme-200`; no hover, borda ou título em `--verde-700`.
 - Detalhes decorativos (sublinhado do menu ativo, cursor da frase digitada): `--dourado-400`. Sem linhas douradas separando seções, títulos ou passos: a separação é feita com espaço.
