@@ -7,6 +7,7 @@ import SetaLonga from "../components/SetaLonga.astro";
 import CabecalhoSecao from "../components/CabecalhoSecao.astro";
 import GaleriaClinica from "../components/GaleriaClinica.astro";
 import CardEquipe from "../components/CardEquipe.astro";
+import CardInstagram from "../components/CardInstagram.astro";
 import { clinica } from "../dados/clinica";
 // Foto do topo: para trocar, mude só esta linha
 import fotoHero from "../assets/fotos/frente-clinica1.png";
@@ -241,13 +242,24 @@ const passos = [
     </div>
   </section>
 
-  <!-- 5. A clínica -->
-  <section class="secao secao-areia">
+  <!-- 5. A clínica. Espaço de baixo menor que o padrão da .transicao (até 6.5rem),
+       para o card do Instagram ficar perto das fotos; o degradê continua com a mesma altura -->
+  <section
+    class="secao secao-areia transicao"
+    style="--cor-atual: var(--creme-100); --cor-proxima: var(--creme-50); --altura-transicao: 2rem"
+  >
     <div class="container">
       <CabecalhoSecao apoio={`${clinica.endereco}, em Cuiabá.`}>
         Um espaço pensado para <em>você</em>
       </CabecalhoSecao>
       <GaleriaClinica />
+    </div>
+  </section>
+
+  <!-- 6. Instagram (card estático, sem script da Meta) -->
+  <section class="secao secao-instagram">
+    <div class="container revelar">
+      <CardInstagram />
     </div>
   </section>
 </BaseLayout>
@@ -645,6 +657,14 @@ const passos = [
   .registro {
     color: var(--verde-700);
     letter-spacing: 0.05em;
+  }
+
+  /* 6. Instagram: pouco espaço em cima, perto das fotos da clínica, e embaixo menos
+     que o padrão das seções (até 6.5rem), para o rodapé não ficar longe do card.
+     O "section" no seletor vence a regra .transicao + section do global.css */
+  section.secao-instagram {
+    padding-top: 2rem;
+    padding-bottom: clamp(2.5rem, 5vw, 3.5rem);
   }
 
   /* 3b. Equipe. Mesmo fundo da seção seguinte (creme), então sem espaço embaixo:

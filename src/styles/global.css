@@ -33,6 +33,12 @@
   --whatsapp: #25d366;
   --whatsapp-hover: #1ebe5d;
 
+  /* Cores do gradiente do Instagram: só no círculo do perfil (components/CardInstagram.astro) */
+  --instagram-amarelo: #fdf497;
+  --instagram-laranja: #fd5949;
+  --instagram-rosa: #d6249f;
+  --instagram-azul: #285aeb;
+
   /* TODO: trocar pelas fontes do Canva quando o cliente mandar */
   /* Reservas: se uma fonte não existir no aparelho (ou não carregar), o navegador
      tenta a próxima da lista. Todas parecidas com a primeira; a última é a genérica. */

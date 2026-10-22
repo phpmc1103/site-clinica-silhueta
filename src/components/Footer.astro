@@ -8,14 +8,12 @@ const ano = new Date().getFullYear();
 
 <footer class="footer fundo-verde" id="contato">
   <div class="container colunas">
-    <div>
+    <div class="coluna">
       <Image class="logo" src={logoHorizontalClaro} alt="Clínica Silhueta" />
-      <p class="suave">Clínica médica em Cuiabá. Há mais de 30 anos cuidando da sua saúde e do seu bem-estar.</p>
-      <!-- TODO: nome, CRM e RQE do responsável técnico -->
-      <p class="suave pequeno">Responsável técnico: Dr(a). Nome Sobrenome · CRM-MT 0000</p>
+      <p class="suave">Clínica médica em Cuiabá há mais de 30 anos.</p>
     </div>
 
-    <div>
+    <div class="coluna">
       <h2>Onde estamos</h2>
       <address>
         {clinica.endereco}<br />
@@ -24,14 +22,14 @@ const ano = new Date().getFullYear();
       <a href={clinica.mapaLink} target="_blank" rel="noopener">Ver no mapa</a>
     </div>
 
-    <div>
+    <div class="coluna">
       <h2>Horários</h2>
       <ul>
         {clinica.horarios.map((h) => <li>{h}</li>)}
       </ul>
     </div>
 
-    <div>
+    <div class="coluna">
       <h2>Fale com a gente</h2>
       <ul>
         <li>WhatsApp: <a href={clinica.whatsappLink} target="_blank" rel="noopener">{clinica.whatsappTexto}</a></li>
@@ -50,9 +48,15 @@ const ano = new Date().getFullYear();
       referrerpolicy="no-referrer-when-downgrade"></iframe>
   </div>
 
+  <!-- Faixa final. Os "·" são só visuais: no celular somem e cada parte vai para uma linha -->
   <div class="container rodape-final">
-    <p>© {ano} Clínica Silhueta · Cuiabá, MT</p>
-    <a href="/privacidade">Política de privacidade</a>
+    <!-- TODO: confirmar com o André os dados do responsável técnico e as especialidades dos RQE -->
+    <p class="creditos">
+      <span>© {ano} Clínica Silhueta</span><span class="sep" aria-hidden="true"> · </span><span
+        >Responsável técnico: Dr. Waldirson Benedito Morais Coelho</span
+      ><span class="sep" aria-hidden="true"> · </span><span>CRM-MT 2277 · RQE 675 e 2270</span>
+    </p>
+    <a href="/privacidade">Política de Privacidade</a>
   </div>
 </footer>
 
@@ -61,42 +65,71 @@ const ano = new Date().getFullYear();
     background: var(--verde-900);
     color: var(--creme-50);
     padding-top: 4rem;
-    font-size: 0.95rem;
   }
 
+  /* 1 coluna no celular, 2 no tablet, 4 no computador (a primeira um pouco mais larga) */
   .colunas {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
     gap: 2.5rem;
+    align-items: start;
   }
 
+  @media (min-width: 640px) {
+    .colunas {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .colunas {
+      grid-template-columns: 1.3fr 1fr 1fr 1fr;
+    }
+  }
+
+  /* Mesma fonte, mesma altura de linha e mesmo espaço entre itens nas 4 colunas */
+  .coluna,
+  .coluna ul {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* sem isso o logo fica centralizado na coluna */
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .coluna p,
+  .coluna address,
+  .coluna ul {
+    margin: 0;
+  }
+
+  /* O topo do logo e o topo dos títulos começam na mesma altura */
   .logo {
+    display: block;
     height: 3.5rem;
     width: auto;
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.75rem;
   }
 
+  /* Títulos iguais em todas as colunas: ficam na mesma linha de base */
   h2 {
     font-family: var(--fonte-texto);
     font-size: 0.8rem;
     font-weight: 400;
+    line-height: 1;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--verde-200);
-    margin-bottom: 1rem; /* título e conteúdo separados só pelo espaço */
+    margin: 0 0 0.75rem; /* título e conteúdo separados só pelo espaço */
   }
 
   address {
     font-style: normal;
-    margin-bottom: 0.5rem;
   }
 
   ul {
     list-style: none;
-    margin: 0;
     padding: 0;
-    display: grid;
-    gap: 0.4rem;
   }
 
   a {
@@ -109,10 +142,6 @@ const ano = new Date().getFullYear();
 
   .suave {
     color: var(--verde-200);
-  }
-
-  .pequeno {
-    font-size: 0.85rem;
   }
 
   .mapa {
@@ -128,18 +157,46 @@ const ano = new Date().getFullYear();
     border: 0;
   }
 
+  /* Faixa final, separada por uma linha fina e discreta */
   .rodape-final {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
     gap: 0.5rem;
     margin-top: 2.5rem;
     padding-block: 1.5rem;
-    font-size: 0.85rem;
+    border-top: 1px solid color-mix(in srgb, var(--verde-200) 20%, transparent);
+    font-size: 0.8rem;
+    line-height: 1.6;
     color: var(--verde-200);
+    text-align: center;
   }
 
-  .rodape-final p {
+  .creditos {
     margin: 0;
+  }
+
+  /* Celular: cada parte numa linha, sem os "·" */
+  .creditos span:not(.sep) {
+    display: block;
+  }
+
+  .sep {
+    display: none;
+  }
+
+  /* Computador: tudo numa linha, créditos à esquerda e o link à direita */
+  @media (min-width: 1024px) {
+    .rodape-final {
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 2rem;
+      text-align: left;
+    }
+
+    .creditos span:not(.sep),
+    .sep {
+      display: inline;
+    }
   }
 </style>
