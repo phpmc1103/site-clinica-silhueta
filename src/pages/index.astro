@@ -8,7 +8,7 @@ import CabecalhoSecao from "../components/CabecalhoSecao.astro";
 import GaleriaClinica from "../components/GaleriaClinica.astro";
 import { clinica } from "../dados/clinica";
 // Foto do topo: para trocar, mude só esta linha
-import fotoHero from "../assets/fotos/hero-placeholder.svg";
+import fotoHero from "../assets/fotos/frente-clinica1.png";
 // Fotos dos cards de tratamento
 // TODO: foto provisória tirada da internet; trocar por foto própria ou com licença de uso
 import fotoLinhasDeExpressao from "../assets/tratamentos/linhas-de-expressao.png";
@@ -86,7 +86,7 @@ const passos = [
       src={fotoHero}
       alt=""
       widths={[640, 960, 1280, 1920]}
-      sizes="100vw"
+      sizes="(max-width: 767px) 100vw, 70vw"
       loading="eager"
       fetchpriority="high"
       quality={80}
@@ -293,9 +293,11 @@ const passos = [
 
   .hero-fundo {
     position: absolute;
-    inset: 0;
+    /* No computador a foto ocupa só a parte direita: o lado esquerdo fica
+       atrás do creme sólido do texto, e a placa da fachada aparece inteira */
+    inset: 0 0 0 30%;
     z-index: -2;
-    width: 100%;
+    width: 70%;
     height: 100%;
     object-fit: cover;
   }
@@ -350,6 +352,12 @@ const passos = [
   @media (max-width: 767px) {
     .hero {
       align-items: flex-end;
+    }
+    /* Celular: foto na largura toda, centrada na placa "Clínica Silhueta" */
+    .hero-fundo {
+      inset: 0;
+      width: 100%;
+      object-position: 45% center;
     }
     .hero::before {
       background: linear-gradient(
