@@ -1,0 +1,118 @@
+---
+// Card de uma pessoa da equipe: círculo de fundo com a foto recortada (PNG
+// transparente) "saindo" pelo topo dele. Sem foto, mostra uma silhueta genérica
+// na mesma posição. Uso: <CardEquipe pessoa={entrada.data} />
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  pessoa: CollectionEntry<"equipe">["data"];
+}
+
+const { pessoa } = Astro.props;
+---
+
+<article class="card-equipe">
+  <div class="retrato">
+    {pessoa.foto ? (
+      <Image
+        src={pessoa.foto}
+        alt={pessoa.nome}
+        widths={[240, 480]}
+        sizes="(min-width: 1024px) 13rem, 45vw"
+      />
+    ) : (
+      <svg viewBox="0 0 100 125" aria-hidden="true">
+        <circle cx="50" cy="31" r="18" />
+        <path d="M12 125 C12 84 30 56 50 56 C70 56 88 84 88 125 Z" />
+      </svg>
+    )}
+  </div>
+
+  <h3>{pessoa.nome}</h3>
+  <p class="cargo">{pessoa.cargo}</p>
+  <p class="registro">
+    {pessoa.crm}
+    {pessoa.rqe && <><br />{pessoa.rqe}</>}
+  </p>
+</article>
+
+<style>
+  .card-equipe {
+    text-align: center;
+  }
+
+  /* Moldura 4:5. O círculo ocupa a largura toda e fica encostado embaixo, então a
+     parte de cima da moldura (20%) sobra para a cabeça passar do círculo */
+  .retrato {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    margin-bottom: 1.25rem;
+  }
+
+  .retrato::before {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--areia-100);
+  }
+
+  /* Recorte da foto, em duas camadas somadas: um retângulo que mantém tudo acima
+     do centro do círculo (60% da altura) e o próprio círculo, que arredonda a parte
+     de baixo. A cor das camadas não aparece, só a opacidade conta */
+  .retrato :global(img),
+  .retrato svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    --camadas:
+      linear-gradient(var(--branco) 0 0) top / 100% 60% no-repeat,
+      radial-gradient(closest-side, var(--branco) calc(100% - 1px), transparent 100%)
+        bottom / 100% 80% no-repeat;
+    -webkit-mask: var(--camadas);
+    mask: var(--camadas);
+  }
+
+  /* A pessoa encostada embaixo, sem cortar a cabeça */
+  .retrato :global(img) {
+    object-fit: contain;
+    object-position: center bottom;
+  }
+
+  .retrato svg {
+    fill: color-mix(in srgb, var(--verde-700) 22%, var(--areia-100));
+  }
+
+  /* Nome com um traço curto dourado embaixo (decoração: --dourado-400) */
+  h3 {
+    font-size: 1.35rem;
+    margin: 0 0 0.6rem;
+  }
+
+  h3::after {
+    content: "";
+    display: block;
+    width: 2rem;
+    height: 1px;
+    margin: 0.6rem auto 0;
+    background: var(--dourado-400);
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .cargo {
+    color: var(--marrom-900);
+  }
+
+  .registro {
+    color: var(--marrom-700);
+    letter-spacing: 0.04em;
+  }
+</style>

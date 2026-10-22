@@ -19,4 +19,21 @@ const tratamentos = defineCollection({
   }),
 });
 
-export const collections = { tratamentos };
+// Cada arquivo .md em src/content/equipe é uma pessoa da equipe (seção "Equipe" da home).
+// A foto fica ao lado do .md e é indicada pelo caminho relativo (ex.: foto: ./maria.png).
+const equipe = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/equipe" }),
+  schema: ({ image }) =>
+    z.object({
+      nome: z.string(),
+      cargo: z.string(), // ex.: "Médica dermatologista" (especialidade só com RQE)
+      crm: z.string(), // ex.: "CRM-MT 12345"
+      rqe: z.string().optional(), // ex.: "RQE 6789"
+      // PNG com fundo transparente, pessoa da cintura para cima, de preferência 4:5
+      foto: image().optional(),
+      ordem: z.number(),
+      rascunho: z.boolean().default(true),
+    }),
+});
+
+export const collections = { tratamentos, equipe };

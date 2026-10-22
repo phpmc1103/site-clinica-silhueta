@@ -6,18 +6,20 @@ import IconeWhatsapp from "../components/IconeWhatsapp.astro";
 import SetaLonga from "../components/SetaLonga.astro";
 import CabecalhoSecao from "../components/CabecalhoSecao.astro";
 import GaleriaClinica from "../components/GaleriaClinica.astro";
+import CardEquipe from "../components/CardEquipe.astro";
 import { clinica } from "../dados/clinica";
 // Foto do topo: para trocar, mude só esta linha
 import fotoHero from "../assets/fotos/frente-clinica1.png";
-// Fotos dos cards de tratamento
-// TODO: foto provisória tirada da internet; trocar por foto própria ou com licença de uso
-import fotoLinhasDeExpressao from "../assets/tratamentos/linhas-de-expressao.png";
 
 // Faixa verde: número de tratamentos (sem os programas).
 // Contado das páginas de tratamento, então se atualiza sozinho.
 const totalTratamentos = (
   await getCollection("tratamentos", (t) => t.data.categoria !== "programas")
 ).length;
+
+// Seção Equipe: uma pessoa por arquivo em src/content/equipe, na ordem do campo `ordem`.
+// TODO: antes da Fase 4, esconder rascunhos em produção (como nos tratamentos)
+const equipe = (await getCollection("equipe")).sort((a, b) => a.data.ordem - b.data.ordem);
 
 // Seção 2: serviços organizados pelo que o paciente procura.
 // Para pôr foto num card: importe a imagem no topo do arquivo e preencha `imagem` e `alt`.
@@ -37,9 +39,6 @@ const cuidados: Cuidado[] = [
     problema: "Linhas de expressão e rugas",
     tratamentos: "Toxina botulínica, preenchimento e fios de sustentação",
     href: "/tratamentos/facial",
-    imagem: fotoLinhasDeExpressao,
-    alt: "Close da pele ao redor da boca, com rugas e linhas finas",
-    zoom: 1.2, // esconde o fundo bege à esquerda do rosto
   },
   {
     problema: "Flacidez e perda de firmeza",
@@ -195,6 +194,21 @@ const passos = [
           cuidar dos pacientes. Texto a ser escrito com o próprio médico.
         </p>
       </div>
+    </div>
+  </section>
+
+  <!-- 3b. Equipe (dados em src/content/equipe) -->
+  <section id="equipe" class="secao secao-equipe">
+    <div class="container">
+      <p class="sobretitulo revelar">Equipe</p>
+      <CabecalhoSecao>Profissionais que <em>acompanham</em> você</CabecalhoSecao>
+      <ul class="equipe">
+        {equipe.map((pessoa) => (
+          <li class="revelar revelar-sequencia">
+            <CardEquipe pessoa={pessoa.data} />
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 
@@ -631,6 +645,44 @@ const passos = [
   .registro {
     color: var(--verde-700);
     letter-spacing: 0.05em;
+  }
+
+  /* 3b. Equipe. Mesmo fundo da seção seguinte (creme), então sem espaço embaixo:
+     o respiro entre as duas vem só do espaço de cima da "Como funciona" */
+  .secao-equipe {
+    padding-bottom: 0;
+  }
+
+  /* Etiqueta e título centralizados, alinhados com a grade de cards.
+     O :global alcança o cabeçalho, que está em components/CabecalhoSecao.astro */
+  .secao-equipe .sobretitulo,
+  .secao-equipe :global(.cabecalho) {
+    text-align: center;
+  }
+
+  /* Cards centralizados: 2 por linha no celular e no tablet, 5 no computador.
+     Com flex (e não grid), uma linha incompleta fica centralizada */
+  .equipe {
+    --colunas: 2;
+    --espaco: clamp(1rem, 3vw, 2rem);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3rem var(--espaco);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .equipe li {
+    width: calc((100% - (var(--colunas) - 1) * var(--espaco)) / var(--colunas));
+    max-width: 15rem;
+  }
+
+  @media (min-width: 1024px) {
+    .equipe {
+      --colunas: 5;
+    }
   }
 
   /* 4. Passos: blocos areia da mesma altura, 1, 2 ou 4 por linha */
