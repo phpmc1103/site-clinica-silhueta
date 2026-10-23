@@ -11,6 +11,15 @@ import CardInstagram from "../components/CardInstagram.astro";
 import { clinica } from "../dados/clinica";
 // Foto do topo: para trocar, mude só esta linha
 import fotoHero from "../assets/fotos/frente-clinica1.png";
+// Fotos dos cards de tratamento
+// TODO: confirmar a origem e a licença de uso destas fotos (não podem ser de banco de imagens sem licença)
+import fotoLinhasDeExpressao from "../assets/fotos/linhas-de-expressao.jpg";
+// Fundo preto removido (ficou transparente: aparece o nude da moldura)
+import fotoFlacidez from "../assets/fotos/flacidez-sem-fundo.png";
+import fotoManchas from "../assets/fotos/manchas-sem-fundo.png";
+import fotoGordura from "../assets/fotos/gordura-sem-fundo.png";
+import fotoPeso from "../assets/fotos/peso-sem-fundo.png";
+import fotoMassagem from "../assets/fotos/massagem-sem-fundo.png";
 
 // Faixa verde: número de tratamentos (sem os programas).
 // Contado das páginas de tratamento, então se atualiza sozinho.
@@ -33,6 +42,11 @@ type Cuidado = {
   alt?: string; // descrição da foto (obrigatória quando houver imagem)
   // Zoom na foto, ancorado à direita, para cortar o fundo (1 = sem zoom)
   zoom?: number;
+  // Foto com fundo branco: o branco some e fica com a cor nude da moldura
+  fundoBranco?: boolean;
+  // Que parte da foto aparece no recorte (object-position). Ex.: "center 70%"
+  // mostra mais da parte de baixo, ou seja, a foto "sobe" na moldura
+  posicao?: string;
 };
 
 const cuidados: Cuidado[] = [
@@ -40,31 +54,45 @@ const cuidados: Cuidado[] = [
     problema: "Linhas de expressão e rugas",
     tratamentos: "Toxina botulínica, preenchimento e fios de sustentação",
     href: "/tratamentos/facial",
+    imagem: fotoLinhasDeExpressao,
+    alt: "Close da parte de baixo do rosto de uma mulher madura, com linhas ao redor da boca e no queixo",
+    fundoBranco: true,
   },
   {
     problema: "Flacidez e perda de firmeza",
     tratamentos: "Ultraformer, Sculptra e Elleva",
     href: "/tratamentos/facial",
+    imagem: fotoFlacidez,
+    alt: "Mão segurando a pele flácida na parte de baixo do braço",
+    posicao: "center 70%",
   },
   {
     problema: "Manchas, textura e viço da pele",
     tratamentos: "Laser Lavieen, peeling e microagulhamento",
     href: "/tratamentos/facial",
+    imagem: fotoManchas,
+    alt: "Close do rosto de uma mulher de perfil, com manchas escuras na bochecha",
   },
   {
     problema: "Gordura localizada e contorno corporal",
     tratamentos: "Heccus Turbo, lipo enzimática, carboxiterapia e massagem modeladora",
     href: "/tratamentos/corporal",
+    imagem: fotoGordura,
+    alt: "Mão segurando a gordura localizada na lateral da cintura",
   },
   {
     problema: "Peso e composição corporal",
     tratamentos: "Protocolos de emagrecimento e de sarcopenia, com acompanhamento médico",
     href: "/tratamentos/injetaveis",
+    imagem: fotoPeso,
+    alt: "Mulher medindo a cintura com uma fita métrica amarela",
   },
   {
     problema: "Cansaço, stress e bem-estar",
     tratamentos: "Protocolo stress e ansiedade e reposição de vitaminas",
     href: "/tratamentos/injetaveis",
+    imagem: fotoMassagem,
+    alt: "Mãos fazendo massagem nas costas de uma pessoa deitada, coberta por uma toalha",
   },
 ];
 
@@ -127,12 +155,14 @@ const passos = [
               <div class="card-moldura foto-moldura">
                 {c.imagem ? (
                   <Image
-                    class="card-foto"
+                    class:list={["card-foto", { "card-foto-fundo-branco": c.fundoBranco }]}
                     src={c.imagem}
                     alt={c.alt ?? ""}
                     widths={[400, 640, 800]}
                     sizes="(min-width: 1024px) 23rem, (min-width: 640px) 45vw, 90vw"
-                    style={c.zoom ? `--zoom: ${c.zoom}` : undefined}
+                    style={[c.zoom && `--zoom: ${c.zoom}`, c.posicao && `object-position: ${c.posicao}`]
+                      .filter(Boolean)
+                      .join("; ") || undefined}
                   />
                 ) : (
                   <div class="card-foto card-foto-vazia" aria-hidden="true"></div>
@@ -466,6 +496,12 @@ const passos = [
     scale: var(--zoom, 1);
     transform-origin: right center;
     transition: transform 0.25s ease;
+  }
+
+  /* "Multiplica" a foto pela cor da moldura: o branco vira o nude do fundo e as
+     outras cores quase não mudam. Só para fotos recortadas em fundo branco */
+  .card-foto-fundo-branco {
+    mix-blend-mode: multiply;
   }
 
   .card-corpo {
